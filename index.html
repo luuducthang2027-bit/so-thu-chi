@@ -548,7 +548,15 @@ async function remote(action, p) {
   return j;
 }
 const api = (a, p = {}) => (DEMO ? Local : remote)(a, { token: S.token, ...p });
-const normTx = x => ({ ...x, id: String(x.id), amount: +x.amount || 0, type: x.type === 'thu' ? 'thu' : 'chi', datetime: String(x.datetime).slice(0, 16), note: x.note || '', fixed: x.fixed === true || String(x.fixed).toUpperCase() === 'TRUE' });
+/* Google Sheet có thể tự đổi chuỗi ngày giờ thành kiểu Date → chuẩn hóa về 'YYYY-MM-DDTHH:mm' giờ máy */
+const toDT = v => {
+  const s0 = String(v ?? '').trim();
+  if (/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?$/.test(s0)) return s0.slice(0, 10) + 'T' + s0.slice(11, 16);
+  const d = new Date(s0.replace(/\s*\(.*\)$/, ''));
+  if (isNaN(d)) { const m = s0.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/); return m ? `${m[3]}-${pad(m[2])}-${pad(m[1])}T${pad(m[4] || 0)}:${m[5] || '00'}` : s0.slice(0, 16); }
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+const normTx = x => ({ ...x, id: String(x.id), amount: +String(x.amount).replace(/[^\d.\-]/g, '') || 0, type: String(x.type).trim().toLowerCase() === 'thu' ? 'thu' : 'chi', category: String(x.category || '').trim() || 'Khác', username: String(x.username || '').trim().toLowerCase(), datetime: toDT(x.datetime), note: x.note || '', fixed: x.fixed === true || String(x.fixed).toUpperCase() === 'TRUE' });
 
 /* ====== DỮ LIỆU ====== */
 const visible = () => isAdmin() && S.viewUser !== 'all' ? S.tx.filter(x => x.username === S.viewUser) : S.tx;

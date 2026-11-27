@@ -207,6 +207,8 @@ main{padding-bottom:24px}
 .amt input:focus{outline:0;border-color:var(--pri)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
 .chip{height:38px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px}
+.chip.addc{border-style:dashed;color:var(--inc);font-weight:600}
+.newcat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:4px}.newcat[hidden]{display:none}
 .chip.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card));font-weight:600}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .chk{display:flex!important;align-items:center;gap:10px;font-weight:400!important;color:var(--ink)!important;margin-top:12px}
@@ -305,6 +307,7 @@ vi: {
   nav_report: 'Báo cáo', nav_more: 'Khác', pDay: 'Ngày', pWeek: 'Tuần', pMonth: 'Tháng', pQuarter: 'Quý', pYear: 'Năm', pCustom: 'Tùy chọn', from: 'Từ ngày', to: 'Đến ngày',
   reportTitle: 'Báo cáo thu chi', balance: 'Chênh lệch', chBy: 'Diễn biến thu chi', incByCat: 'Thu theo loại', noIncPeriod: 'Chưa có khoản thu trong kỳ', noExpPeriod: 'Chưa có khoản chi trong kỳ',
   calendar: 'Lịch thu chi · {m}', calHint: 'Xanh (+) là thu, đỏ (−) là chi, K = nghìn. Bấm một ngày để xem chi tiết.', txInPeriod: 'Giao dịch trong kỳ', noPeriodTx: 'Không có giao dịch trong kỳ này',
+  newGroup: 'Nhóm mới', groupName: 'Tên nhóm mới, VD: Tiền điện thoại', addBtn: 'Thêm',
   autoOut: 'Đã tự đăng xuất vì không thao tác trong 2 phút', savedSheet: 'Đã lưu vào Google Sheet', saving: 'Đang lưu…',
   purgeTitle: 'Xóa dữ liệu giao dịch', purgeHint: 'Chỉ admin. Xóa vĩnh viễn giao dịch trên Google Sheet, không thể khôi phục. Tài khoản người dùng vẫn được giữ.',
   purgePeriod: 'Thời gian', purgeAll: 'Toàn bộ thời gian', adminPw: 'Mật khẩu admin để xác nhận', purgeBtn: 'Xóa dữ liệu', purgeQ: 'Xóa {n} giao dịch?', purgeDone: 'Đã xóa {n} giao dịch', purgeNone: 'Không có giao dịch nào để xóa',
@@ -354,6 +357,7 @@ en: {
   nav_report: 'Reports', nav_more: 'More', pDay: 'Day', pWeek: 'Week', pMonth: 'Month', pQuarter: 'Quarter', pYear: 'Year', pCustom: 'Custom', from: 'From', to: 'To',
   reportTitle: 'Income & spending report', balance: 'Net', chBy: 'Income & spending over time', incByCat: 'Income by category', noIncPeriod: 'No income in this period', noExpPeriod: 'No spending in this period',
   calendar: 'Calendar · {m}', calHint: 'Green (+) is income, red (−) is spending, K = thousand. Tap a day for details.', txInPeriod: 'Transactions in period', noPeriodTx: 'No transactions in this period',
+  newGroup: 'New group', groupName: 'New group name, e.g. Phone bill', addBtn: 'Add',
   autoOut: 'Signed out after 2 minutes of inactivity', savedSheet: 'Saved to Google Sheets', saving: 'Saving…',
   purgeTitle: 'Delete transaction data', purgeHint: 'Admins only. Permanently deletes transactions in Google Sheets; this cannot be undone. User accounts are kept.',
   purgePeriod: 'Period', purgeAll: 'All time', adminPw: 'Admin password to confirm', purgeBtn: 'Delete data', purgeQ: 'Delete {n} transactions?', purgeDone: 'Deleted {n} transactions', purgeNone: 'There are no transactions to delete',
@@ -406,6 +410,7 @@ ht: {
   nav_report: 'Rapò', nav_more: 'Plis', pDay: 'Jou', pWeek: 'Semèn', pMonth: 'Mwa', pQuarter: 'Trimès', pYear: 'Ane', pCustom: 'Pèsonalize', from: 'Soti', to: 'Rive',
   reportTitle: 'Rapò revni ak depans', balance: 'Diferans', chBy: 'Revni ak depans sou tan', incByCat: 'Revni pa kategori', noIncPeriod: 'Pa gen revni nan peryòd la', noExpPeriod: 'Pa gen depans nan peryòd la',
   calendar: 'Kalandriye · {m}', calHint: 'Vèt (+) se revni, wouj (−) se depans, K = mil. Peze yon jou pou wè detay.', txInPeriod: 'Tranzaksyon nan peryòd la', noPeriodTx: 'Pa gen tranzaksyon nan peryòd sa a',
+  newGroup: 'Nouvo gwoup', groupName: 'Non nouvo gwoup, egz: Kat telefòn', addBtn: 'Ajoute',
   autoOut: 'Ou dekonekte otomatikman apre 2 minit san aktivite', savedSheet: 'Anrejistre nan Google Sheets', saving: 'Ap anrejistre…',
   purgeTitle: 'Efase done tranzaksyon', purgeHint: 'Se sèlman admin. Sa efase tranzaksyon yo nan Google Sheets pou tout tan, ou pa ka rekipere yo. Kont itilizatè yo rete.',
   purgePeriod: 'Peryòd', purgeAll: 'Tout tan', adminPw: 'Modpas admin pou konfime', purgeBtn: 'Efase done', purgeQ: 'Efase {n} tranzaksyon?', purgeDone: '{n} tranzaksyon efase', purgeNone: 'Pa gen tranzaksyon pou efase',
@@ -956,7 +961,8 @@ function openTx(x) {
     <header><h2>${isNew ? t('addTx') : t('editTx')}</h2><button type="button" class="x" data-close aria-label="${t('close')}">×</button></header>
     <div class="seg ttype">${['chi', 'thu'].map(k => `<button type="button" data-t="${k}" class="${x.type === k ? 'on' : ''}">${k === 'chi' ? t('expense') : t('income')}</button>`).join('')}</div>
     <label class="amt">${t('amountCur', { c: esc(S.cur) })}<input id="tAmt" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" value="${x.amount === '' ? '' : esc(x.amount)}" required></label>
-    <div class="f">${t('category')}<div class="chips" id="tChips"></div><input class="in" id="tCat" placeholder="${t('otherCat')}" value="${esc(x.category ? catName(x.category) : '')}" maxlength="60"></div>
+    <div class="f">${t('category')}<div class="chips" id="tChips"></div><input type="hidden" id="tCat" value="${esc(x.category || '')}">
+      <div class="newcat" id="tNewRow" hidden><input class="in" id="tNewName" maxlength="60" placeholder="${t('groupName')}"><button type="button" class="btn primary" id="tNewAdd">${t('addBtn')}</button></div></div>
     <div class="two" style="margin-top:12px"><label class="f">${t('dateTime')}<input class="in" id="tDt" type="datetime-local" value="${esc(x.datetime)}" required></label>
     <label class="f">${t('note')}<input class="in" id="tNote" value="${esc(x.note)}" maxlength="200" placeholder="${t('notePh')}"></label></div>
     <label class="chk"><input type="checkbox" id="tFix" ${x.fixed ? 'checked' : ''}>${t('fixedChk')}</label>
@@ -964,24 +970,33 @@ function openTx(x) {
     <p class="err" id="tErr"></p>
     <footer>${isNew ? `<button type="button" class="btn ghost" data-close>${t('cancel')}</button>` : `<button type="button" class="btn danger" id="tDel">${t('del')}</button>`}<button class="btn primary" id="tSave">${isNew ? t('saveTx') : t('saveChanges')}</button></footer>
   </form>`);
-  const catIn = document.getElementById('tCat');
+  const catIn = document.getElementById('tCat'), extra = { chi: [], thu: [] }, newRow = document.getElementById('tNewRow'), newName = document.getElementById('tNewName');
+  if (x.category && !CATS[x.type].includes(x.category)) extra[x.type].push(x.category);
   const chips = () => {
     const used = [...new Set(S.tx.filter(y => y.type === x.type).map(y => y.category))];
-    const list = [...new Set([...CATS[x.type], ...used])], cur = catKey(catIn.value);
-    document.getElementById('tChips').innerHTML = list.map(c => `<button type="button" class="chip ${c === cur ? 'on' : ''}" style="--c:${catColor(c)}" data-c="${esc(c)}">${esc(catName(c))}</button>`).join('');
-    document.querySelectorAll('#tChips .chip').forEach(b => b.onclick = () => { catIn.value = catName(b.dataset.c); chips(); });
+    const list = [...new Set([...CATS[x.type], ...used, ...extra[x.type]])], cur = catIn.value;
+    document.getElementById('tChips').innerHTML = list.map(c => `<button type="button" class="chip ${c === cur ? 'on' : ''}" style="--c:${catColor(c)}" data-c="${esc(c)}">${esc(catName(c))}</button>`).join('') +
+      `<button type="button" class="chip addc" id="tNew" aria-expanded="${!newRow.hidden}">+ ${t('newGroup')}</button>`;
+    document.querySelectorAll('#tChips .chip[data-c]').forEach(b => b.onclick = () => { catIn.value = b.dataset.c; newRow.hidden = true; chips(); });
+    document.getElementById('tNew').onclick = () => { newRow.hidden = !newRow.hidden; chips(); if (!newRow.hidden) newName.focus(); };
   };
+  const addGroup = () => {
+    const name = newName.value.trim().replace(/\s+/g, ' ').slice(0, 60); if (!name) { newName.focus(); return; }
+    const k = catKey(name); if (!CATS[x.type].includes(k)) extra[x.type].push(k);
+    catIn.value = k; newName.value = ''; newRow.hidden = true; chips();
+  };
+  document.getElementById('tNewAdd').onclick = addGroup;
+  newName.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); addGroup(); } };
   chips();
-  catIn.oninput = () => { const k = catKey(catIn.value); document.querySelectorAll('#tChips .chip').forEach(b => b.classList.toggle('on', b.dataset.c === k)); };
   modal.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
     x.type = b.dataset.t; modal.querySelectorAll('[data-t]').forEach(y => y.classList.toggle('on', y === b));
-    const k = catKey(catIn.value); if (ALLC.includes(k) && !CATS[x.type].includes(k)) catIn.value = ''; chips();
+    const k = catIn.value; if (k && !CATS[x.type].includes(k) && !S.tx.some(y => y.type === x.type && y.category === k) && !extra[x.type].includes(k)) catIn.value = ''; chips();
   });
   if (isNew) setTimeout(() => document.getElementById('tAmt').focus(), 60);
   document.getElementById('fTx').onsubmit = async e => {
     e.preventDefault();
     const btn = document.getElementById('tSave'), err = document.getElementById('tErr');
-    const data = { id: x.id, username: x.username, type: x.type, amount: document.getElementById('tAmt').value, category: catKey(catIn.value), datetime: document.getElementById('tDt').value, note: document.getElementById('tNote').value, fixed: document.getElementById('tFix').checked };
+    const data = { id: x.id, username: x.username, type: x.type, amount: document.getElementById('tAmt').value, category: catIn.value, datetime: document.getElementById('tDt').value, note: document.getElementById('tNote').value, fixed: document.getElementById('tFix').checked };
     try { cleanTx(data); } catch (y) { err.textContent = errText(y); return; }
     btn.disabled = true; btn.textContent = t('saving'); err.textContent = '';
     try {

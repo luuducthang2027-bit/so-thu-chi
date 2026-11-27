@@ -59,6 +59,15 @@ button{cursor:pointer}
 .rng{display:flex;gap:10px;flex-wrap:wrap}
 .rng label{display:grid;gap:4px;font-size:13px;color:#ffffffc7}
 .rng input{height:44px;border-radius:12px;border:1px solid #ffffff38;background:#ffffff1a;color:#fff;padding:0 10px;font-size:16px;color-scheme:dark}
+.out{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 12px;border-radius:10px;border:1px solid #ffffff38;background:none;color:#fff;font-weight:600;font-size:14px;flex:none;white-space:nowrap}
+.out svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.out:hover{background:#ffffff1a}
+.logo{flex:none}.tblw{overflow-x:auto}
+@media (max-width:1420px){.out span{display:none}.out{width:44px;padding:0;justify-content:center}.tabs button{padding:0 10px}}
+.danger-zone{border-color:color-mix(in srgb,var(--exp) 45%,var(--line))}
+.pform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:end;margin-top:14px}
+.pform select{height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);padding:0 12px;font-size:16px;width:100%}
+@media (max-width:900px){.pform{grid-template-columns:minmax(0,1fr)}.out span{display:none}.out{padding:0;width:44px;justify-content:center}.top-in{gap:8px}}
 /* top bar */
 .top{background:var(--brand);color:#fff;position:sticky;top:0;z-index:20}
 .top-in{display:flex;align-items:center;gap:16px;height:64px}
@@ -296,6 +305,9 @@ vi: {
   nav_report: 'Báo cáo', nav_more: 'Khác', pDay: 'Ngày', pWeek: 'Tuần', pMonth: 'Tháng', pQuarter: 'Quý', pYear: 'Năm', pCustom: 'Tùy chọn', from: 'Từ ngày', to: 'Đến ngày',
   reportTitle: 'Báo cáo thu chi', balance: 'Chênh lệch', chBy: 'Diễn biến thu chi', incByCat: 'Thu theo loại', noIncPeriod: 'Chưa có khoản thu trong kỳ', noExpPeriod: 'Chưa có khoản chi trong kỳ',
   calendar: 'Lịch thu chi · {m}', calHint: 'Xanh (+) là thu, đỏ (−) là chi, K = nghìn. Bấm một ngày để xem chi tiết.', txInPeriod: 'Giao dịch trong kỳ', noPeriodTx: 'Không có giao dịch trong kỳ này',
+  autoOut: 'Đã tự đăng xuất vì không thao tác trong 2 phút', savedSheet: 'Đã lưu vào Google Sheet', saving: 'Đang lưu…',
+  purgeTitle: 'Xóa dữ liệu giao dịch', purgeHint: 'Chỉ admin. Xóa vĩnh viễn giao dịch trên Google Sheet, không thể khôi phục. Tài khoản người dùng vẫn được giữ.',
+  purgePeriod: 'Thời gian', purgeAll: 'Toàn bộ thời gian', adminPw: 'Mật khẩu admin để xác nhận', purgeBtn: 'Xóa dữ liệu', purgeQ: 'Xóa {n} giao dịch?', purgeDone: 'Đã xóa {n} giao dịch', purgeNone: 'Không có giao dịch nào để xóa',
   incCount: '{n} khoản thu', biggest: 'Lớn nhất: {x}', manageUsersHint: 'Tạo, xóa tài khoản và xem dữ liệu từng người', open: 'Mở', showing: 'Hiện {a}/{b} giao dịch mới nhất',
   err: { bad_login: 'Sai tên đăng nhập hoặc mật khẩu', locked: 'Sai mật khẩu quá nhiều lần. Thử lại sau 10 phút.', reg_off: 'Chức năng tự đăng ký đang tắt. Liên hệ admin để được cấp tài khoản.',
     bad_username: 'Tên đăng nhập 3–30 ký tự: chữ thường không dấu, số, dấu chấm hoặc gạch dưới', user_exists: 'Tên đăng nhập đã tồn tại', short_pw: 'Mật khẩu cần ít nhất 6 ký tự',
@@ -342,6 +354,9 @@ en: {
   nav_report: 'Reports', nav_more: 'More', pDay: 'Day', pWeek: 'Week', pMonth: 'Month', pQuarter: 'Quarter', pYear: 'Year', pCustom: 'Custom', from: 'From', to: 'To',
   reportTitle: 'Income & spending report', balance: 'Net', chBy: 'Income & spending over time', incByCat: 'Income by category', noIncPeriod: 'No income in this period', noExpPeriod: 'No spending in this period',
   calendar: 'Calendar · {m}', calHint: 'Green (+) is income, red (−) is spending, K = thousand. Tap a day for details.', txInPeriod: 'Transactions in period', noPeriodTx: 'No transactions in this period',
+  autoOut: 'Signed out after 2 minutes of inactivity', savedSheet: 'Saved to Google Sheets', saving: 'Saving…',
+  purgeTitle: 'Delete transaction data', purgeHint: 'Admins only. Permanently deletes transactions in Google Sheets; this cannot be undone. User accounts are kept.',
+  purgePeriod: 'Period', purgeAll: 'All time', adminPw: 'Admin password to confirm', purgeBtn: 'Delete data', purgeQ: 'Delete {n} transactions?', purgeDone: 'Deleted {n} transactions', purgeNone: 'There are no transactions to delete',
   incCount: '{n} income items', biggest: 'Largest: {x}', manageUsersHint: 'Create or delete accounts and view each person’s data', open: 'Open', showing: 'Showing latest {a} of {b}',
   cats: { 'Chi phí hàng ngày': 'Daily expenses', 'Ăn uống': 'Food & drink', 'Đi lại': 'Transport', 'Mua đồ': 'Shopping', 'Siêu thị': 'Supermarket', 'Chi phí cố định hàng tháng': 'Fixed monthly costs', 'Lương cộng tác viên': 'Contractor wages', 'Xe nâng': 'Forklift', 'Thuê người': 'Hired labor',
     'Nhà ở': 'Housing', 'Điện nước & Internet': 'Utilities & Internet', 'Sức khỏe': 'Health', 'Học tập': 'Education', 'Giải trí': 'Entertainment', 'Gửi về gia đình': 'Sent to family', 'Khác': 'Other',
@@ -391,6 +406,9 @@ ht: {
   nav_report: 'Rapò', nav_more: 'Plis', pDay: 'Jou', pWeek: 'Semèn', pMonth: 'Mwa', pQuarter: 'Trimès', pYear: 'Ane', pCustom: 'Pèsonalize', from: 'Soti', to: 'Rive',
   reportTitle: 'Rapò revni ak depans', balance: 'Diferans', chBy: 'Revni ak depans sou tan', incByCat: 'Revni pa kategori', noIncPeriod: 'Pa gen revni nan peryòd la', noExpPeriod: 'Pa gen depans nan peryòd la',
   calendar: 'Kalandriye · {m}', calHint: 'Vèt (+) se revni, wouj (−) se depans, K = mil. Peze yon jou pou wè detay.', txInPeriod: 'Tranzaksyon nan peryòd la', noPeriodTx: 'Pa gen tranzaksyon nan peryòd sa a',
+  autoOut: 'Ou dekonekte otomatikman apre 2 minit san aktivite', savedSheet: 'Anrejistre nan Google Sheets', saving: 'Ap anrejistre…',
+  purgeTitle: 'Efase done tranzaksyon', purgeHint: 'Se sèlman admin. Sa efase tranzaksyon yo nan Google Sheets pou tout tan, ou pa ka rekipere yo. Kont itilizatè yo rete.',
+  purgePeriod: 'Peryòd', purgeAll: 'Tout tan', adminPw: 'Modpas admin pou konfime', purgeBtn: 'Efase done', purgeQ: 'Efase {n} tranzaksyon?', purgeDone: '{n} tranzaksyon efase', purgeNone: 'Pa gen tranzaksyon pou efase',
   incCount: '{n} revni', biggest: 'Pi gwo: {x}', manageUsersHint: 'Kreye oswa efase kont epi gade done chak moun', open: 'Louvri', showing: '{a} dènye sou {b}',
   cats: { 'Chi phí hàng ngày': 'Depans chak jou', 'Ăn uống': 'Manje ak bwason', 'Đi lại': 'Transpò', 'Mua đồ': 'Achte bagay', 'Siêu thị': 'Makèt', 'Chi phí cố định hàng tháng': 'Depans fiks chak mwa', 'Lương cộng tác viên': 'Salè kolaboratè', 'Xe nâng': 'Fòklif', 'Thuê người': 'Lwe moun travay',
     'Nhà ở': 'Lojman', 'Điện nước & Internet': 'Kouran, dlo & Entènèt', 'Sức khỏe': 'Sante', 'Học tập': 'Edikasyon', 'Giải trí': 'Lwazi', 'Gửi về gia đình': 'Voye bay fanmi', 'Khác': 'Lòt',
@@ -515,6 +533,8 @@ const Local = (() => {
     deleteUser(p) { const me = admin(p), un = norm(p.username); if (un === me.username) throw Error('self_delete'); db.users = db.users.filter(x => x.username !== un); db.tx = db.tx.filter(x => x.username !== un); save(); return {}; },
     resetPassword(p) { admin(p); const u = db.users.find(x => x.username === norm(p.username)); if (!u) throw Error('user_not_found'); checkPw(p.password); u.hash = hashL(u.username + p.password); save(); return {}; },
     changePassword(p) { const u = auth(p.token); if (u.hash !== hashL(u.username + p.oldPassword)) throw Error('wrong_pw'); checkPw(p.newPassword); u.hash = hashL(u.username + p.newPassword); save(); return {}; },
+    purgeTx(p) { const me = admin(p); if (me.hash !== hashL(me.username + p.password)) throw Error('wrong_pw'); const un = p.username && p.username !== 'all' ? norm(p.username) : '', mo = p.month || '';
+      const before = db.tx.length; db.tx = db.tx.filter(x => !((!un || x.username === un) && (!mo || x.datetime.startsWith(mo)))); save(); return { deleted: before - db.tx.length }; },
     updateProfile(p) { const u = auth(p.token); u.name = String(p.name || '').trim().slice(0, 60) || u.name; save(); return { user: pub(u) }; }
   };
   return (action, p) => new Promise((res, rej) => setTimeout(() => { try { if (!A[action]) throw Error('bad_action'); res(JSON.parse(JSON.stringify(A[action](p)))); } catch (e) { rej(e); } }, 150));
@@ -546,6 +566,7 @@ const I = {
   cog: '<svg viewBox="0 0 24 24"><path d="M4 6h9m4 0h3M4 12h3m4 0h9M4 18h11m4 0h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
   report: '<svg viewBox="0 0 24 24"><path d="M12 3v9h9"/><path d="M20.5 15.5A9 9 0 1 1 8.5 3.7"/></svg>',
   more: '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>',
+  logout: '<svg viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg>',
   plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>'
 };
 const langSwitch = () => `<div class="lang" role="group" aria-label="${t('language')}">${[['vi', 'VI', 'Tiếng Việt'], ['en', 'EN', 'English'], ['ht', 'HT', 'Kreyòl ayisyen']].map(([k, s, n]) => `<button data-lang="${k}" class="${LANG === k ? 'on' : ''}" title="${n}" aria-pressed="${LANG === k}">${s}</button>`).join('')}</div>`;
@@ -604,7 +625,7 @@ function renderLogin(mode = 'login', msg = '') {
       p.name = document.getElementById('aName').value;
     }
     btn.disabled = true; err.textContent = '';
-    try { const r = await api(reg ? 'register' : 'login', p); S.token = r.token; S.user = r.user; store.set('ct_token', r.token); await loadData(); S.view = 'home'; renderApp(); }
+    try { const r = await api(reg ? 'register' : 'login', p); S.token = r.token; S.user = r.user; store.set('ct_token', r.token); lastAct = Date.now(); touch(); await loadData(); S.view = 'home'; renderApp(); }
     catch (x) { err.textContent = errText(x); btn.disabled = false; }
   };
 }
@@ -628,6 +649,7 @@ function renderApp() {
     <nav class="tabs">${navBtns}</nav>
     <button class="btn lime add-d" data-add>+ ${t('addTx')}</button>
     ${langSwitch()}
+    <button class="out" data-logout title="${t('logout')}" aria-label="${t('logout')}">${I.logout}<span>${t('logout')}</span></button>
   </div></header>
   <main id="view"></main>
   <nav class="bnav">${mNav}</nav>`;
@@ -953,12 +975,12 @@ function openTx(x) {
     const btn = document.getElementById('tSave'), err = document.getElementById('tErr');
     const data = { id: x.id, username: x.username, type: x.type, amount: document.getElementById('tAmt').value, category: catKey(catIn.value), datetime: document.getElementById('tDt').value, note: document.getElementById('tNote').value, fixed: document.getElementById('tFix').checked };
     try { cleanTx(data); } catch (y) { err.textContent = errText(y); return; }
-    btn.disabled = true; err.textContent = '';
+    btn.disabled = true; btn.textContent = t('saving'); err.textContent = '';
     try {
       const r = await api('saveTx', { tx: data }), nt = normTx(r.tx), i = S.tx.findIndex(y => y.id === nt.id);
       if (i >= 0) S.tx[i] = nt; else S.tx.push(nt);
-      closeModal(); if (!nt.datetime.startsWith(S.month)) S.month = nt.datetime.slice(0, 7); renderView(); toast(isNew ? t('savedTx') : t('updated'));
-    } catch (y) { err.textContent = errText(y); btn.disabled = false; }
+      closeModal(); if (!nt.datetime.startsWith(S.month)) S.month = nt.datetime.slice(0, 7); renderView(); toast(DEMO ? (isNew ? t('savedTx') : t('updated')) : t('savedSheet'));
+    } catch (y) { err.textContent = errText(y); btn.disabled = false; btn.textContent = isNew ? t('saveTx') : t('saveChanges'); }
   };
   const del = document.getElementById('tDel');
   if (del) del.onclick = async () => {
@@ -973,6 +995,12 @@ function vUsers() {
   const m = S.month;
   return `<section class="hero slim"><div class="wrap"><div class="ctx" style="padding-bottom:4px"></div><h1>${t('usersTitle')}</h1><p class="lead">${t('usersLead')}</p></div></section>
   <section class="wrap grid">
+    <article class="card full"><header class="ch"><h2>${t('userList', { n: S.users.length })}</h2><span class="legend">${t('figuresFor', { m: monthLabel(m) })}</span></header>
+      <div class="tblw"><table class="tbl stack"><thead><tr><th>${t('fullName')}</th><th>${t('username')}</th><th>${t('role')}</th><th class="r">${t('inc')}</th><th class="r">${t('exp')}</th><th class="r">${t('nTxShort')}</th><th></th></tr></thead><tbody>
+      ${S.users.map(u => { const T = S.tx.filter(x => x.username === u.username && x.datetime.startsWith(m)); return `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.username)}</td><td><span class="role ${u.role === 'admin' ? 'admin' : ''}">${u.role === 'admin' ? t('roleAdmin') : t('regular')}</span></td>
+        <td class="r thu">${fmt(sum(T, 'thu'))}</td><td class="r chi">${fmt(sum(T, 'chi'))}</td><td class="r">${S.tx.filter(x => x.username === u.username).length}</td>
+        <td><div class="acts"><button class="btn sm ghost" data-uview="${esc(u.username)}">${t('viewBtn')}</button><button class="btn sm ghost" data-ureset="${esc(u.username)}">${t('resetPw')}</button>${u.username !== S.user.username ? `<button class="btn sm danger" data-udel="${esc(u.username)}">${t('del')}</button>` : ''}</div></td></tr>`; }).join('')}
+      </tbody></table></div></article>
     <article class="card"><header class="ch"><h2>${t('newUser')}</h2></header>
       <form class="form" id="fNewU" novalidate>
         <label>${t('username')}<input class="in" id="nuUser" autocapitalize="none" spellcheck="false" required></label>
@@ -982,12 +1010,13 @@ function vUsers() {
         <p class="hint">${t('regHint')}</p>
         <button class="btn primary">${t('register')}</button><p class="err" id="nuErr"></p>
       </form></article>
-    <article class="card span2"><header class="ch"><h2>${t('userList', { n: S.users.length })}</h2><span class="legend">${t('figuresFor', { m: monthLabel(m) })}</span></header>
-      <table class="tbl stack"><thead><tr><th>${t('fullName')}</th><th>${t('username')}</th><th>${t('role')}</th><th class="r">${t('inc')}</th><th class="r">${t('exp')}</th><th class="r">${t('nTxShort')}</th><th></th></tr></thead><tbody>
-      ${S.users.map(u => { const T = S.tx.filter(x => x.username === u.username && x.datetime.startsWith(m)); return `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.username)}</td><td><span class="role ${u.role === 'admin' ? 'admin' : ''}">${u.role === 'admin' ? t('roleAdmin') : t('regular')}</span></td>
-        <td class="r thu">${fmt(sum(T, 'thu'))}</td><td class="r chi">${fmt(sum(T, 'chi'))}</td><td class="r">${S.tx.filter(x => x.username === u.username).length}</td>
-        <td><div class="acts"><button class="btn sm ghost" data-uview="${esc(u.username)}">${t('viewBtn')}</button><button class="btn sm ghost" data-ureset="${esc(u.username)}">${t('resetPw')}</button>${u.username !== S.user.username ? `<button class="btn sm danger" data-udel="${esc(u.username)}">${t('del')}</button>` : ''}</div></td></tr>`; }).join('')}
-      </tbody></table></article>
+    <article class="card span2 danger-zone"><header class="ch"><h2>${t('purgeTitle')}</h2></header><p class="hint">${t('purgeHint')}</p>
+      <form class="pform" id="fPurge" novalidate>
+        <label class="f">${t('account')}<select id="pgUser"><option value="all">${t('allUsers')}</option>${S.users.map(u => `<option value="${esc(u.username)}">${esc(u.name)} (${esc(u.username)})</option>`).join('')}</select></label>
+        <label class="f">${t('purgePeriod')}<select id="pgMonth"><option value="">${t('purgeAll')}</option>${[...new Set(S.tx.map(x => x.datetime.slice(0, 7)))].sort().reverse().map(m => `<option value="${m}">${monthLabel(m)}</option>`).join('')}</select></label>
+        <label class="f">${t('adminPw')}<input class="in" id="pgPw" type="password" autocomplete="current-password"></label>
+        <button class="btn danger">${t('purgeBtn')}</button>
+      </form><p class="err" id="pgErr"></p></article>
   </section>`;
 }
 function bindUsers() {
@@ -996,6 +1025,16 @@ function bindUsers() {
     btn.disabled = true; err.textContent = '';
     try { await api('createUser', { name: document.getElementById('nuName').value, username: document.getElementById('nuUser').value, password: document.getElementById('nuPass').value, role: document.getElementById('nuRole').value }); S.users = (await api('listUsers')).users; renderView(); toast(t('userCreated')); }
     catch (x) { err.textContent = errText(x); btn.disabled = false; }
+  };
+  document.getElementById('fPurge').onsubmit = async e => {
+    e.preventDefault(); const err = document.getElementById('pgErr'); err.textContent = '';
+    const un = document.getElementById('pgUser').value, mo = document.getElementById('pgMonth').value, pw = document.getElementById('pgPw').value;
+    const n = S.tx.filter(x => (un === 'all' || x.username === un) && (!mo || x.datetime.startsWith(mo))).length;
+    if (!n) { err.textContent = t('purgeNone'); return; }
+    if (!pw) { err.textContent = t('adminPw'); return; }
+    if (!await ask(t('purgeQ', { n }), `${un === 'all' ? t('allUsers') : uname(un)} · ${mo ? monthLabel(mo) : t('purgeAll')}. ${t('noUndo')}`, t('purgeBtn'), true)) return;
+    try { const r = await api('purgeTx', { username: un, month: mo, password: pw }); await loadData(); renderView(); toast(t('purgeDone', { n: r.deleted })); }
+    catch (x) { renderView(); const el = document.getElementById('pgErr'); if (el) el.textContent = errText(x); }
   };
   document.querySelectorAll('[data-uview]').forEach(b => b.onclick = () => { S.viewUser = b.dataset.uview; S.view = 'home'; renderApp(); });
   document.querySelectorAll('[data-udel]').forEach(b => b.onclick = async () => {
@@ -1045,8 +1084,17 @@ function bindSettings() {
   document.getElementById('reload').onclick = async () => { try { await loadData(); renderView(); toast(t('reloaded')); } catch (x) { toast(errText(x)); } };
   const rd = document.getElementById('resetDemo');
   if (rd) rd.onclick = async () => { if (await ask(t('resetDemo') + '?', t('resetDemoMsg'), t('restore'), true)) { store.set('ct_demo_db_v4', null); store.set('ct_token', null); location.reload(); } };
-  document.getElementById('logout').onclick = () => { store.set('ct_token', null); S.token = S.user = null; S.tx = []; S.users = []; S.viewUser = 'all'; renderLogin(); };
+  document.getElementById('logout').onclick = () => logout();
 }
+
+/* ====== ĐĂNG XUẤT + TỰ THOÁT SAU 2 PHÚT ====== */
+const IDLE_MS = 2 * 60 * 1000;
+function logout(msg) { store.set('ct_token', null); store.set('ct_last', null); S.token = S.user = null; S.tx = []; S.users = []; S.viewUser = 'all'; S.view = 'home'; if (!modal.hidden) closeModal(); tip.hidden = true; renderLogin('login', msg || ''); }
+const touch = () => { if (S.user) store.set('ct_last', Date.now()); };
+let lastAct = Date.now();
+['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
+setInterval(() => { if (!S.user) return; const last = Math.max(lastAct, +store.get('ct_last') || 0); if (Date.now() - last > IDLE_MS) logout(t('autoOut')); else if (Date.now() - lastAct < 15000) touch(); }, 5000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.user && Date.now() - Math.max(lastAct, +store.get('ct_last') || 0) > IDLE_MS) logout(t('autoOut')); });
 
 /* ====== MODAL, TOAST ====== */
 function openModal(html) { modal.innerHTML = html; modal.hidden = false; document.body.style.overflow = 'hidden'; }
@@ -1067,6 +1115,7 @@ document.addEventListener('keydown', e => {
 /* ====== SỰ KIỆN CHUNG ====== */
 document.addEventListener('click', async e => {
   const lb = e.target.closest('[data-lang]'); if (lb) { setLang(lb.dataset.lang); return; }
+  if (e.target.closest('[data-logout]')) { logout(); return; }
   const el = e.target.closest('[data-nav],[data-add],[data-m],[data-today],[data-edit],[data-cat],[data-fixed],[data-day],[data-rpm],[data-rps],[data-calm]');
   if (!el || !S.user || el.closest('#modal')) return;
   if (el.dataset.nav) { S.view = el.dataset.nav; renderApp(); scrollTo(0, 0); }
@@ -1097,8 +1146,9 @@ document.addEventListener('change', e => { if (e.target.id === 'uSel') { S.viewU
   document.documentElement.lang = LANG; document.title = t('appName');
   app.innerHTML = `<div class="loading">${t('loading')}</div>`;
   S.token = store.get('ct_token');
+  if (S.token && Date.now() - (+store.get('ct_last') || 0) > IDLE_MS) { store.set('ct_token', null); S.token = null; return renderLogin('login', t('autoOut')); }
   if (!S.token) return renderLogin();
-  try { S.user = (await api('me')).user; await loadData(); renderApp(); }
+  try { S.user = (await api('me')).user; lastAct = Date.now(); touch(); await loadData(); renderApp(); }
   catch (e) { store.set('ct_token', null); S.token = null; renderLogin('login', errText(e)); }
 })();
 }

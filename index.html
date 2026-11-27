@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#00463c">
+<title>Sổ Thu Chi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, trustworthy personal finance; the month's numbers first
+   IDEA: a bank passbook — deep green cover band, ruled ledger rows below
+   PICTURE: balance figure large + cumulative income/expense lines for the month
+   COLOUR and TYPE: deep green #00463c, lime-white #e6f5c8, coral for spending; Inter Tight + Inter
+   LAYOUT: green band (month, balance, figures), cards below; bottom nav + add button on phones */
+:root{color-scheme:light;--bg:#f4f7f5;--card:#fff;--soft:#eef3f0;--ink:#0f1f1a;--muted:#56675f;--line:#e0e8e3;--brand:#00463c;--pri:#00463c;--inc:#00805a;--exp:#d4402b;--lime:#e6f5c8;--coral:#ff6f59;--sh:0 1px 2px #0f1f1a0f,0 8px 24px #0f1f1a0d}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#0a1310;--card:#111d19;--soft:#182620;--ink:#e7efeb;--muted:#94a79f;--line:#24342e;--brand:#06362e;--pri:#1d8a69;--inc:#45d3a1;--exp:#ff7b67;--sh:none}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0a1310;--card:#111d19;--soft:#182620;--ink:#e7efeb;--muted:#94a79f;--line:#24342e;--brand:#06362e;--pri:#1d8a69;--inc:#45d3a1;--exp:#ff7b67;--sh:none}
+:root[data-theme=light]{color-scheme:light}
+*{box-sizing:border-box;min-width:0}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+h1,h2,.big,.num,.logo{font-family:"Inter Tight",Inter,system-ui,sans-serif}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance}
+h2{font-size:17px;line-height:1.3;margin:0;font-weight:600}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(4vw,16px)}
+.tnum,.num,.big,.v,.ra b,td.r{font-variant-numeric:tabular-nums;white-space:nowrap}
+.lang{display:inline-flex;gap:2px;background:#ffffff1a;border-radius:10px;padding:3px;margin-left:auto;flex:none}
+.lang button{border:0;background:none;color:#ffffffc7;min-width:40px;height:38px;border-radius:8px;font:600 13px Inter,system-ui,sans-serif}
+.lang button.on{background:var(--lime);color:#00463c}
+.add-d{margin-left:auto}.add-d+.lang{margin-left:0}
+.auth-form{position:relative}
+.auth-lang{position:absolute;top:16px;right:16px}
+.auth-lang .lang{background:var(--soft)}.auth-lang .lang button{color:var(--muted)}.auth-lang .lang button.on{background:var(--pri);color:#fff}
+@media (max-width:900px){.auth-lang{position:fixed;top:14px;right:14px;z-index:5}.auth-lang .lang{background:#ffffff26}.auth-lang .lang button{color:#fff}.auth-lang .lang button.on{background:var(--lime);color:#00463c}.auth-brand{padding-top:72px!important}}
+/* top bar */
+.top{background:var(--brand);color:#fff;position:sticky;top:0;z-index:20}
+.top-in{display:flex;align-items:center;gap:16px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;white-space:nowrap}
+.pill{font:600 11px Inter;font-style:normal;background:var(--coral);color:#2a0d07;padding:2px 8px;border-radius:99px}
+.tabs{display:flex;gap:4px;margin-left:12px}
+.tabs button{display:flex;align-items:center;gap:8px;background:none;border:0;color:#ffffffbf;height:44px;padding:0 14px;border-radius:10px;font-weight:500}
+.tabs button.on{background:#ffffff1f;color:#fff}
+.tabs svg,.bnav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border-radius:10px;border:1px solid transparent;font-weight:600;font-size:15px;background:var(--soft);white-space:nowrap}
+.btn.lime{background:var(--lime);color:#00463c}
+.btn.primary{background:var(--pri);color:#fff}
+.btn.ghost{background:transparent;border-color:var(--line)}
+.btn.danger{background:transparent;color:var(--exp);border-color:var(--exp)}
+.btn.sm{height:40px;padding:0 12px;font-size:14px}
+.btn:disabled{opacity:.6;cursor:wait}
+.link{background:none;border:0;color:var(--inc);font-weight:600;font-size:14px;padding:8px 0}
+/* hero band */
+.hero{background:var(--brand);color:#fff;padding:0 0 30px}
+.hero.slim{padding-bottom:24px}
+.ctx{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:8px 0 18px}
+.mpick{display:inline-flex;align-items:center;background:#ffffff1a;border-radius:12px}
+.mpick button{width:44px;height:44px;background:none;border:0;color:#fff;font-size:22px;border-radius:12px}
+.mpick span{min-width:132px;text-align:center;font-weight:600}
+.today{background:none;border:1px solid #ffffff40;color:#fff;height:36px;border-radius:10px;padding:0 12px;font-size:14px;margin-left:6px}
+.upick{display:flex;align-items:center;gap:8px;font-size:14px;color:#ffffffbf}
+.upick select{height:44px;border-radius:12px;border:1px solid #ffffff38;background:#ffffff1a;color:#fff;padding:0 12px;max-width:240px}
+option{color:#111;background:#fff}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:28px;align-items:end}
+.lbl{font-size:13px;color:#ffffffc7}
+.big{font-size:clamp(40px,7vw,64px);font-weight:700;line-height:1;margin:8px 0 10px;letter-spacing:-.02em}
+.big.neg{color:#ffb4a6}
+.sub{font-size:15px;color:#ffffffd9}
+.figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.fig-i{border-top:1px solid #ffffff38;padding-top:10px}
+.fig-i .num{font-size:22px;font-weight:600;margin:2px 0}
+.fig-i .d{font-size:13px;color:#ffffffb3}
+.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.dot.inc{background:#7fe3bd}.dot.exp{background:var(--coral)}
+.lead{color:#ffffffc7;margin:8px 0 0;max-width:62ch}
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start;padding-top:20px;padding-bottom:40px}
+.span2{grid-column:span 2}.full{grid-column:1/-1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--sh)}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--inc)}.legend i.exp{background:var(--exp)}
+.fig{position:relative;height:300px}.fig.sm{height:240px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:pan-y}
+svg text{font:12px Inter,system-ui,sans-serif;fill:var(--muted)}
+svg .lbl-s{font-weight:600;fill:var(--ink)}
+.gl{stroke:var(--line);stroke-width:1}
+.l-inc,.l-exp{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.l-inc{stroke:var(--inc)}.l-exp{stroke:var(--exp)}
+.a-exp{fill:var(--exp);opacity:.07}
+.b-inc{fill:var(--inc)}.b-exp{fill:var(--exp)}
+.hov line{stroke:var(--muted);stroke-dasharray:3 3}
+.hov circle{stroke:var(--card);stroke-width:2}
+/* category bars */
+.cb{display:block;width:100%;text-align:left;background:none;border:0;padding:6px 0;border-radius:8px}
+.cb-t{display:flex;align-items:center;gap:10px}
+.nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.v{font-weight:600;font-size:15px}
+.cb-bar{display:grid;grid-template-columns:minmax(0,1fr) 40px;align-items:center;gap:8px;margin:6px 0 0 38px}
+.cb-bar div{height:8px;background:var(--soft);border-radius:4px;overflow:hidden}
+.cb-bar i{display:block;height:100%;background:var(--exp);border-radius:4px}
+.cb-bar em{font-style:normal;font-size:12px;color:var(--muted);text-align:right}
+.badge{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font:600 11px Inter;color:var(--ink);background:var(--soft);background:color-mix(in srgb,var(--c) 20%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c) 55%,transparent)}
+/* ledger rows */
+.rows{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line);cursor:pointer}
+.row:first-child{border-top:0}
+.row:hover .rt b{text-decoration:underline;text-decoration-color:var(--line)}
+.rt b,.rt span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rt b{font-size:15px;font-weight:600}.rt span,.ra span{font-size:13px;color:var(--muted)}
+.ra{text-align:right}.ra b{display:block;font-size:15px}
+.thu{color:var(--inc)}.chi{color:var(--exp)}
+.tag{font-size:11px;font-weight:500;background:var(--soft);color:var(--muted);padding:1px 7px;border-radius:6px;margin-left:6px;vertical-align:1px}
+.empty{text-align:center;color:var(--muted);padding:28px 8px;font-size:14px}
+.fixbn{grid-column:1/-1;background:var(--lime);color:#00463c;border:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.fixbn .btn{background:#00463c;color:#fff}
+/* transactions */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+.in,.filters input,.filters select,.form select{height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);padding:0 12px;font-size:16px;width:100%}
+.filters input{flex:1 1 220px;width:auto}.filters select{width:auto;flex:0 1 200px}
+.seg{display:inline-flex;background:var(--soft);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:none;height:38px;padding:0 14px;border-radius:8px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0000001f}
+.sumline{font-size:14px;color:var(--muted);margin:16px 2px 10px;display:flex;flex-wrap:wrap;gap:6px 16px}
+.sumline b{font-variant-numeric:tabular-nums}
+.day{margin-bottom:12px;padding-top:12px;padding-bottom:6px}
+.dh{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:600;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--line);text-transform:none}
+.dh span:first-child::first-letter{text-transform:uppercase}
+/* forms */
+.form{display:grid;gap:12px}
+.form label,.f{display:grid;gap:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.err{color:var(--exp);font-size:14px;min-height:20px;margin:6px 0 0}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+.tbl .r{text-align:right}
+.acts{display:flex;gap:6px;justify-content:flex-end}.tbl th,.tbl td b{white-space:nowrap}
+.role{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--soft)}
+.role.admin{background:var(--lime);color:#00463c}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;overflow-wrap:anywhere}
+/* auth */
+.auth{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.auth-brand{background:var(--brand);color:#fff;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.auth-brand p{color:#ffffffcc;max-width:44ch;margin:12px 0 0;font-size:17px}
+.auth-art{width:100%;max-width:480px;height:auto;align-self:center}
+.auth-form{display:grid;place-items:center;padding:24px}
+.auth-form .card{width:min(420px,100%);padding:26px}
+.auth-form .seg{display:grid;grid-template-columns:1fr 1fr;margin-bottom:18px}
+.demo-note{font-size:13px;background:var(--soft);border-radius:10px;padding:10px 12px;margin-top:14px;color:var(--muted)}
+.demo-note b{color:var(--ink)}
+/* nav for phones */
+.bnav{display:none}
+.fab{display:none}
+main{padding-bottom:24px}
+/* modal */
+.modal{position:fixed;inset:0;background:#06110dcc;z-index:50;display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.sheet{background:var(--card);border-radius:18px;width:min(520px,100%);max-height:92vh;overflow:auto;padding:20px;animation:up .22s ease-out}
+.sheet.sm{width:min(400px,100%)}
+.sheet header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sheet p{margin:8px 0 0}
+.x{width:44px;height:44px;border-radius:12px;border:0;background:var(--soft);font-size:22px;line-height:1}
+.ttype{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.ttype button{height:44px}
+.ttype button.on[data-t=chi]{background:var(--exp);color:#fff}
+.ttype button.on[data-t=thu]{background:var(--inc);color:#fff}
+.amt{display:grid;gap:4px;margin:16px 0 6px;font-size:14px;font-weight:600;color:var(--muted)}
+.amt input{font:700 34px "Inter Tight",Inter,sans-serif;height:60px;border:0;border-bottom:2px solid var(--line);background:none;width:100%;padding:0;color:var(--ink);font-variant-numeric:tabular-nums}
+.amt input:focus{outline:0;border-color:var(--pri)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
+.chip{height:38px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px}
+.chip.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card));font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chk{display:flex!important;align-items:center;gap:10px;font-weight:400!important;color:var(--ink)!important;margin-top:12px}
+.chk input{width:20px;height:20px;accent-color:var(--pri)}
+.sheet footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+@keyframes up{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#0f1f1a;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1}
+.tip{position:fixed;z-index:40;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;box-shadow:0 6px 20px #0000002a;min-width:170px}
+.tip b{display:block;margin-bottom:4px}.tip div{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+.loading{min-height:100vh;display:grid;place-items:center;color:var(--muted)}
+@media (max-width:900px){
+ .tabs,.add-d{display:none}.add-d+.lang{margin-left:auto}
+ .grid{grid-template-columns:minmax(0,1fr)}.span2{grid-column:auto}
+ .hero-grid{grid-template-columns:minmax(0,1fr);gap:18px}
+ main{padding-bottom:110px}
+ .bnav{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+ .bnav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:60px;background:none;border:0;font-size:11px;color:var(--muted);font-weight:500}
+ .bnav button.on{color:var(--inc)}
+ .fab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:18px;border:0;background:var(--coral);color:#2a0d07;z-index:31;box-shadow:0 8px 24px #0000003d}
+ .fab svg{width:28px;height:28px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round}
+ .toast{bottom:150px}
+ .auth{grid-template-columns:minmax(0,1fr)}
+ .auth-brand{padding:28px 20px}.auth-art{max-width:320px}
+}
+@media (max-width:600px){
+ .figs{grid-template-columns:1fr 1fr}.figs .fig-i:last-child{grid-column:1/-1}
+ .fig-i .num{font-size:19px}
+ .modal{place-items:end stretch;padding:0}
+ .sheet{border-radius:18px 18px 0 0;width:100%;max-height:94vh;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+ .sheet footer .primary{flex:1}
+ .two{grid-template-columns:1fr}
+ .fig{height:250px}.fig.sm{height:210px}
+ .filters select{flex:1 1 140px}
+ table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start!important}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;color:var(--muted);font-size:12px}.stack td:empty{display:none}.stack .acts{justify-content:flex-start;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">Đang tải…</div></div>
+<div id="modal" class="modal" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="tip" class="tip" hidden></div>
+<script>
+{
+/* ====== CẤU HÌNH / CONFIG ======
+   Dán URL Web App của Google Apps Script (kết thúc bằng /exec) vào API_URL.
+   Để trống = chế độ DEMO (dữ liệu mẫu chỉ lưu trong trình duyệt). */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwNbZ1K3yn0cAxj-DywVdzBAvKsVxef5rgEXgT2UyZHP4wyNRvfTJa5wpaevtio-_UJsw/exec';
+const DEMO = !API_URL;
+
+/* ====== NGÔN NGỮ / LANGUAGES ====== */
+const L = {
+vi: {
+  appName: 'Sổ Thu Chi', locale: 'vi-VN',
+  months: ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'],
+  mshort: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+  days: ['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'],
+  monthFmt: (m, y) => `Tháng ${m}/${y}`, dm: (d, m) => `${d}/${m}`, dayFmt: (w, d, m, y) => `${w}, ${pad(d)}/${pad(m)}/${y}`,
+  login: 'Đăng nhập', register: 'Tạo tài khoản', fullName: 'Họ và tên', fullNameOpt: 'Họ và tên (không bắt buộc)', username: 'Tên đăng nhập', password: 'Mật khẩu', password2: 'Nhập lại mật khẩu',
+  pwMismatch: 'Hai mật khẩu không khớp', needUserPass: 'Nhập tên đăng nhập và mật khẩu', btnRegister: 'Tạo tài khoản và vào app',
+  authTitle: 'Ghi thu chi mỗi ngày, nhìn rõ tiền đi đâu mỗi tháng.', authSub: 'Mỗi người một tài khoản riêng. Dữ liệu lưu trên Google Sheet, dùng được trên điện thoại và máy tính.',
+  demoNote: 'Đây là bản mẫu, dữ liệu demo lưu trong trình duyệt. Thử admin: {a} — hoặc tài khoản thường: {u}',
+  regHint: 'Tên đăng nhập 3–30 ký tự: chữ thường không dấu, số, dấu chấm hoặc gạch dưới. Mật khẩu từ 6 ký tự.',
+  nav_home: 'Tổng quan', nav_tx: 'Giao dịch', nav_users: 'Người dùng', nav_settings: 'Cài đặt', addTx: 'Thêm giao dịch',
+  prevMonth: 'Tháng trước', nextMonth: 'Tháng sau', thisMonth: 'Tháng này', view: 'Xem', allUsers: 'Tất cả người dùng',
+  leftIn: 'Còn lại · {m}', saved: 'Đã để dành {p}% thu nhập tháng', overspent: 'Chi vượt thu {x}', noIncome: 'Chưa có khoản thu trong tháng',
+  totalInc: 'Tổng thu', totalExp: 'Tổng chi', avgDay: 'Chi trung bình/ngày', nTxMonth: '{n} giao dịch trong tháng', vsPrev: '{a} {p}% so với tháng trước', noPrev: 'Tháng trước: chưa có',
+  fixedBanner: '{n} khoản cố định của tháng trước chưa ghi cho {m}', addAll: 'Thêm tất cả', fixedAdded: 'Đã thêm {n} khoản cố định',
+  chCum: 'Thu và chi cộng dồn trong tháng', inc: 'Thu', exp: 'Chi', byCat: 'Chi theo loại', noExpMonth: 'Chưa có khoản chi trong tháng', trend6: 'Thu chi 6 tháng gần nhất',
+  recent: 'Giao dịch gần đây', seeAll: 'Xem tất cả', noTx: 'Chưa có giao dịch', cumInc: 'Thu cộng dồn', cumExp: 'Chi cộng dồn', inDay: 'Trong ngày', left: 'Còn lại',
+  txTitle: 'Giao dịch · {m}', search: 'Tìm theo ghi chú, loại, số tiền…', all: 'Tất cả', allCats: 'Tất cả loại', csv: 'Xuất CSV', nTx: '{n} giao dịch',
+  noMatch: 'Không có giao dịch phù hợp. Bấm “+” để thêm khoản thu hoặc chi.', csvDone: 'Đã xuất file CSV', csvDemo: 'Đã tạo CSV (bản xem trước có thể chặn tải về)', csvBlocked: 'Trình duyệt chặn tải file',
+  hdrDate: 'Ngày giờ', account: 'Tài khoản', hdrType: 'Thu/Chi', category: 'Loại', amount: 'Số tiền', note: 'Ghi chú', fixed: 'Cố định', yes: 'Có',
+  editTx: 'Sửa giao dịch', expense: 'Khoản chi', income: 'Khoản thu', amountCur: 'Số tiền ({c})', otherCat: 'Hoặc gõ loại khác…', dateTime: 'Ngày giờ', notePh: 'VD: cơm trưa, tiền nhà…',
+  fixedChk: 'Khoản cố định hàng tháng (tháng sau app gợi ý ghi lại)', txOf: 'Giao dịch của:', cancel: 'Hủy', del: 'Xóa', saveTx: 'Lưu giao dịch', saveChanges: 'Lưu thay đổi',
+  savedTx: 'Đã lưu giao dịch', updated: 'Đã cập nhật', delTxQ: 'Xóa giao dịch?', noUndo: 'Không thể hoàn tác.', deletedTx: 'Đã xóa giao dịch', close: 'Đóng',
+  usersTitle: 'Quản lý người dùng', usersLead: 'Admin xem và sửa được dữ liệu của mọi tài khoản. Tài khoản thường chỉ thấy dữ liệu của chính mình.',
+  newUser: 'Tạo tài khoản mới', role: 'Vai trò', roleUser: 'Người dùng thường', roleAdmin: 'Admin', userList: 'Danh sách tài khoản ({n})', figuresFor: 'Số liệu {m}',
+  nTxShort: 'Số GD', regular: 'Thường', viewBtn: 'Xem', resetPw: 'Đặt lại MK', userCreated: 'Đã tạo tài khoản', delUserQ: 'Xóa tài khoản?',
+  delUserMsg: 'Xóa “{n}” ({u}) và toàn bộ giao dịch của tài khoản này. Không thể hoàn tác.', delUserBtn: 'Xóa tài khoản', userDeleted: 'Đã xóa tài khoản',
+  resetTitle: 'Đặt lại mật khẩu', newPw: 'Mật khẩu mới', savePw: 'Lưu mật khẩu', pwReset: 'Đã đặt lại mật khẩu',
+  settingsTitle: 'Cài đặt', loggedAs: 'Đang đăng nhập: {n} ({u}) · {r}', profile: 'Hồ sơ và hiển thị', currency: 'Đơn vị tiền tệ',
+  curHint: 'Đơn vị tiền chỉ đổi cách hiển thị trên máy này, không quy đổi số tiền.', save: 'Lưu', savedOk: 'Đã lưu', changePw: 'Đổi mật khẩu', curPw: 'Mật khẩu hiện tại', pwChanged: 'Đã đổi mật khẩu',
+  data: 'Dữ liệu', storage: 'Lưu trữ', storDemo: 'Bản mẫu – dữ liệu demo trong trình duyệt', storSheet: 'Google Sheet (qua Apps Script)', reload: 'Tải lại dữ liệu', reloaded: 'Đã tải lại',
+  resetDemo: 'Khôi phục dữ liệu mẫu', resetDemoMsg: 'Mọi thay đổi trong bản demo sẽ bị xóa.', restore: 'Khôi phục', logout: 'Đăng xuất', loading: 'Đang tải…', language: 'Ngôn ngữ',
+  cats: {},
+  err: { bad_login: 'Sai tên đăng nhập hoặc mật khẩu', locked: 'Sai mật khẩu quá nhiều lần. Thử lại sau 10 phút.', reg_off: 'Chức năng tự đăng ký đang tắt. Liên hệ admin để được cấp tài khoản.',
+    bad_username: 'Tên đăng nhập 3–30 ký tự: chữ thường không dấu, số, dấu chấm hoặc gạch dưới', user_exists: 'Tên đăng nhập đã tồn tại', short_pw: 'Mật khẩu cần ít nhất 6 ký tự',
+    login_required: 'Vui lòng đăng nhập', bad_session: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn, vui lòng đăng nhập lại', user_gone: 'Tài khoản không còn tồn tại',
+    pw_changed: 'Mật khẩu đã thay đổi, vui lòng đăng nhập lại', admin_only: 'Chỉ admin được làm việc này', wrong_pw: 'Mật khẩu hiện tại không đúng', tx_not_found: 'Không tìm thấy giao dịch',
+    no_perm: 'Bạn không có quyền làm việc này', user_not_found: 'Không tìm thấy tài khoản', self_delete: 'Không thể xóa tài khoản đang đăng nhập', bad_amount: 'Số tiền phải lớn hơn 0',
+    no_cat: 'Hãy chọn hoặc nhập loại', bad_date: 'Ngày giờ không hợp lệ', bad_request: 'Dữ liệu gửi lên không hợp lệ', bad_action: 'Hành động không hợp lệ',
+    no_sheet: 'Không tìm thấy Google Sheet của máy chủ', network: 'Không kết nối được máy chủ. Kiểm tra mạng hoặc URL Apps Script.', server: 'Lỗi máy chủ' }
+},
+en: {
+  appName: 'Money Book', locale: 'en-US',
+  months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  mshort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  days: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  monthFmt: (m, y) => `${L.en.months[m - 1]} ${y}`, dm: (d, m) => `${L.en.mshort[m - 1]} ${d}`, dayFmt: (w, d, m, y) => `${w}, ${L.en.mshort[m - 1]} ${d}, ${y}`,
+  login: 'Sign in', register: 'Create account', fullName: 'Full name', fullNameOpt: 'Full name (optional)', username: 'Username', password: 'Password', password2: 'Confirm password',
+  pwMismatch: 'Passwords do not match', needUserPass: 'Enter a username and password', btnRegister: 'Create account and start',
+  authTitle: 'Log income and spending every day, see where your money goes each month.', authSub: 'Everyone gets their own account. Data is stored in Google Sheets and works on phones and computers.',
+  demoNote: 'This is a demo; sample data is kept in your browser. Try admin: {a} — or a regular account: {u}',
+  regHint: 'Username: 3–30 characters — lowercase letters, numbers, dot or underscore. Password: at least 6 characters.',
+  nav_home: 'Overview', nav_tx: 'Transactions', nav_users: 'Users', nav_settings: 'Settings', addTx: 'Add transaction',
+  prevMonth: 'Previous month', nextMonth: 'Next month', thisMonth: 'This month', view: 'View', allUsers: 'All users',
+  leftIn: 'Left · {m}', saved: 'Saved {p}% of this month’s income', overspent: 'Spending exceeds income by {x}', noIncome: 'No income recorded this month',
+  totalInc: 'Total income', totalExp: 'Total spending', avgDay: 'Average spend/day', nTxMonth: '{n} transactions this month', vsPrev: '{a} {p}% vs last month', noPrev: 'Last month: none',
+  fixedBanner: '{n} fixed items from last month not yet added for {m}', addAll: 'Add all', fixedAdded: 'Added {n} fixed items',
+  chCum: 'Cumulative income and spending this month', inc: 'Income', exp: 'Spending', byCat: 'Spending by category', noExpMonth: 'No spending this month', trend6: 'Last 6 months',
+  recent: 'Recent transactions', seeAll: 'See all', noTx: 'No transactions yet', cumInc: 'Income to date', cumExp: 'Spending to date', inDay: 'That day', left: 'Left',
+  txTitle: 'Transactions · {m}', search: 'Search note, category, amount…', all: 'All', allCats: 'All categories', csv: 'Export CSV', nTx: '{n} transactions',
+  noMatch: 'No matching transactions. Tap “+” to add income or spending.', csvDone: 'CSV exported', csvDemo: 'CSV created (the preview may block downloads)', csvBlocked: 'The browser blocked the download',
+  hdrDate: 'Date time', account: 'Account', hdrType: 'Type', category: 'Category', amount: 'Amount', note: 'Note', fixed: 'Fixed', yes: 'Yes',
+  editTx: 'Edit transaction', expense: 'Expense', income: 'Income', amountCur: 'Amount ({c})', otherCat: 'Or type another category…', dateTime: 'Date & time', notePh: 'e.g. lunch, rent…',
+  fixedChk: 'Fixed monthly item (suggested again next month)', txOf: 'Belongs to:', cancel: 'Cancel', del: 'Delete', saveTx: 'Save transaction', saveChanges: 'Save changes',
+  savedTx: 'Transaction saved', updated: 'Updated', delTxQ: 'Delete transaction?', noUndo: 'This cannot be undone.', deletedTx: 'Transaction deleted', close: 'Close',
+  usersTitle: 'Manage users', usersLead: 'Admins can view and edit every account’s data. Regular accounts only see their own.',
+  newUser: 'Create new account', role: 'Role', roleUser: 'Regular user', roleAdmin: 'Admin', userList: 'Accounts ({n})', figuresFor: 'Figures for {m}',
+  nTxShort: 'Txns', regular: 'Regular', viewBtn: 'View', resetPw: 'Reset password', userCreated: 'Account created', delUserQ: 'Delete account?',
+  delUserMsg: 'Delete “{n}” ({u}) and all of its transactions. This cannot be undone.', delUserBtn: 'Delete account', userDeleted: 'Account deleted',
+  resetTitle: 'Reset password', newPw: 'New password', savePw: 'Save password', pwReset: 'Password reset',
+  settingsTitle: 'Settings', loggedAs: 'Signed in as {n} ({u}) · {r}', profile: 'Profile & display', currency: 'Currency',
+  curHint: 'Currency only changes how amounts are shown on this device; it does not convert them.', save: 'Save', savedOk: 'Saved', changePw: 'Change password', curPw: 'Current password', pwChanged: 'Password changed',
+  data: 'Data', storage: 'Storage', storDemo: 'Demo — sample data in this browser', storSheet: 'Google Sheets (via Apps Script)', reload: 'Reload data', reloaded: 'Reloaded',
+  resetDemo: 'Restore sample data', resetDemoMsg: 'All changes in the demo will be lost.', restore: 'Restore', logout: 'Sign out', loading: 'Loading…', language: 'Language',
+  cats: { 'Chi phí hàng ngày': 'Daily expenses', 'Ăn uống': 'Food & drink', 'Đi lại': 'Transport', 'Mua đồ': 'Shopping', 'Siêu thị': 'Supermarket', 'Chi phí cố định hàng tháng': 'Fixed monthly costs',
+    'Nhà ở': 'Housing', 'Điện nước & Internet': 'Utilities & Internet', 'Sức khỏe': 'Health', 'Học tập': 'Education', 'Giải trí': 'Entertainment', 'Gửi về gia đình': 'Sent to family', 'Khác': 'Other',
+    'Lương': 'Salary', 'Thưởng': 'Bonus', 'Phụ cấp': 'Allowance', 'Thu khác': 'Other income' },
+  err: { bad_login: 'Wrong username or password', locked: 'Too many failed attempts. Try again in 10 minutes.', reg_off: 'Self sign-up is turned off. Ask the admin for an account.',
+    bad_username: 'Username must be 3–30 characters: lowercase letters, numbers, dot or underscore', user_exists: 'That username is already taken', short_pw: 'Password needs at least 6 characters',
+    login_required: 'Please sign in', bad_session: 'Your session is invalid or has expired, please sign in again', user_gone: 'This account no longer exists',
+    pw_changed: 'Password was changed, please sign in again', admin_only: 'Only admins can do this', wrong_pw: 'Current password is incorrect', tx_not_found: 'Transaction not found',
+    no_perm: 'You don’t have permission to do this', user_not_found: 'Account not found', self_delete: 'You can’t delete the account you are signed in with', bad_amount: 'Amount must be greater than 0',
+    no_cat: 'Choose or type a category', bad_date: 'Invalid date or time', bad_request: 'Invalid request', bad_action: 'Invalid action',
+    no_sheet: 'The server’s Google Sheet was not found', network: 'Can’t reach the server. Check your connection or the Apps Script URL.', server: 'Server error' }
+},
+ht: {
+  appName: 'Kaye Lajan', locale: 'fr-HT',
+  months: ['Janvye','Fevriye','Mas','Avril','Me','Jen','Jiyè','Out','Septanm','Oktòb','Novanm','Desanm'],
+  mshort: ['Jan','Fev','Mas','Avr','Me','Jen','Jiy','Out','Sep','Okt','Nov','Des'],
+  days: ['Dimanch','Lendi','Madi','Mèkredi','Jedi','Vandredi','Samdi'],
+  monthFmt: (m, y) => `${L.ht.months[m - 1]} ${y}`, dm: (d, m) => `${d} ${L.ht.mshort[m - 1]}`, dayFmt: (w, d, m, y) => `${w} ${d} ${L.ht.months[m - 1]} ${y}`,
+  login: 'Konekte', register: 'Kreye kont', fullName: 'Non konplè', fullNameOpt: 'Non konplè (si ou vle)', username: 'Non itilizatè', password: 'Modpas', password2: 'Konfime modpas',
+  pwMismatch: 'De modpas yo pa menm', needUserPass: 'Antre non itilizatè ak modpas', btnRegister: 'Kreye kont epi kòmanse',
+  authTitle: 'Note lajan k ap antre ak lajan k ap soti chak jou, wè kote lajan ou ale chak mwa.', authSub: 'Chak moun gen pwòp kont yo. Done yo anrejistre nan Google Sheets, li mache sou telefòn ak òdinatè.',
+  demoNote: 'Sa a se yon demo, done egzanp yo rete nan navigatè a. Eseye admin: {a} — oswa yon kont nòmal: {u}',
+  regHint: 'Non itilizatè: 3–30 karaktè — lèt miniskil, chif, pwen oswa tirè anba. Modpas: omwen 6 karaktè.',
+  nav_home: 'Apèsi', nav_tx: 'Tranzaksyon', nav_users: 'Itilizatè', nav_settings: 'Paramèt', addTx: 'Ajoute tranzaksyon',
+  prevMonth: 'Mwa pase', nextMonth: 'Mwa pwochen', thisMonth: 'Mwa sa a', view: 'Gade', allUsers: 'Tout itilizatè',
+  leftIn: 'Rès · {m}', saved: 'Ou sere {p}% nan revni mwa a', overspent: 'Depans depase revni ak {x}', noIncome: 'Pa gen revni pou mwa sa a',
+  totalInc: 'Total revni', totalExp: 'Total depans', avgDay: 'Mwayèn depans/jou', nTxMonth: '{n} tranzaksyon nan mwa a', vsPrev: '{a} {p}% konpare ak mwa pase', noPrev: 'Mwa pase: anyen',
+  fixedBanner: '{n} depans fiks mwa pase poko ajoute pou {m}', addAll: 'Ajoute tout', fixedAdded: '{n} depans fiks ajoute',
+  chCum: 'Revni ak depans kimile nan mwa a', inc: 'Revni', exp: 'Depans', byCat: 'Depans pa kategori', noExpMonth: 'Pa gen depans mwa sa a', trend6: '6 dènye mwa yo',
+  recent: 'Dènye tranzaksyon', seeAll: 'Wè tout', noTx: 'Poko gen tranzaksyon', cumInc: 'Revni kimile', cumExp: 'Depans kimile', inDay: 'Jou sa a', left: 'Rès',
+  txTitle: 'Tranzaksyon · {m}', search: 'Chèche nòt, kategori, montan…', all: 'Tout', allCats: 'Tout kategori', csv: 'Ekspòte CSV', nTx: '{n} tranzaksyon',
+  noMatch: 'Pa gen tranzaksyon ki koresponn. Peze “+” pou ajoute revni oswa depans.', csvDone: 'CSV ekspòte', csvDemo: 'CSV kreye (apèsi a ka bloke telechajman)', csvBlocked: 'Navigatè a bloke telechajman an',
+  hdrDate: 'Dat ak lè', account: 'Kont', hdrType: 'Tip', category: 'Kategori', amount: 'Montan', note: 'Nòt', fixed: 'Fiks', yes: 'Wi',
+  editTx: 'Modifye tranzaksyon', expense: 'Depans', income: 'Revni', amountCur: 'Montan ({c})', otherCat: 'Oswa tape yon lòt kategori…', dateTime: 'Dat ak lè', notePh: 'egz: manje midi, lwaye…',
+  fixedChk: 'Depans fiks chak mwa (n ap sijere l ankò mwa pwochen)', txOf: 'Pou:', cancel: 'Anile', del: 'Efase', saveTx: 'Anrejistre', saveChanges: 'Anrejistre chanjman',
+  savedTx: 'Tranzaksyon anrejistre', updated: 'Mete ajou', delTxQ: 'Efase tranzaksyon?', noUndo: 'Ou pa ka defèt sa.', deletedTx: 'Tranzaksyon efase', close: 'Fèmen',
+  usersTitle: 'Jere itilizatè', usersLead: 'Admin ka wè epi modifye done tout kont. Kont nòmal wè sèlman pa yo.',
+  newUser: 'Kreye nouvo kont', role: 'Wòl', roleUser: 'Itilizatè nòmal', roleAdmin: 'Admin', userList: 'Kont yo ({n})', figuresFor: 'Chif pou {m}',
+  nTxShort: 'Tranz.', regular: 'Nòmal', viewBtn: 'Gade', resetPw: 'Chanje modpas', userCreated: 'Kont kreye', delUserQ: 'Efase kont?',
+  delUserMsg: 'Efase “{n}” ({u}) ak tout tranzaksyon li yo. Ou pa ka defèt sa.', delUserBtn: 'Efase kont', userDeleted: 'Kont efase',
+  resetTitle: 'Chanje modpas', newPw: 'Nouvo modpas', savePw: 'Anrejistre modpas', pwReset: 'Modpas chanje',
+  settingsTitle: 'Paramèt', loggedAs: 'Konekte kòm {n} ({u}) · {r}', profile: 'Pwofil ak afichaj', currency: 'Lajan',
+  curHint: 'Lajan an chanje sèlman fason montan yo parèt sou aparèy sa a, li pa konvèti yo.', save: 'Anrejistre', savedOk: 'Anrejistre', changePw: 'Chanje modpas', curPw: 'Modpas aktyèl', pwChanged: 'Modpas chanje',
+  data: 'Done', storage: 'Estokaj', storDemo: 'Demo — done egzanp nan navigatè sa a', storSheet: 'Google Sheets (atravè Apps Script)', reload: 'Rechaje done', reloaded: 'Rechaje',
+  resetDemo: 'Retabli done egzanp', resetDemoMsg: 'Tout chanjman nan demo a ap efase.', restore: 'Retabli', logout: 'Dekonekte', loading: 'Ap chaje…', language: 'Lang',
+  cats: { 'Chi phí hàng ngày': 'Depans chak jou', 'Ăn uống': 'Manje ak bwason', 'Đi lại': 'Transpò', 'Mua đồ': 'Achte bagay', 'Siêu thị': 'Makèt', 'Chi phí cố định hàng tháng': 'Depans fiks chak mwa',
+    'Nhà ở': 'Lojman', 'Điện nước & Internet': 'Kouran, dlo & Entènèt', 'Sức khỏe': 'Sante', 'Học tập': 'Edikasyon', 'Giải trí': 'Lwazi', 'Gửi về gia đình': 'Voye bay fanmi', 'Khác': 'Lòt',
+    'Lương': 'Salè', 'Thưởng': 'Bonis', 'Phụ cấp': 'Alokasyon', 'Thu khác': 'Lòt revni' },
+  err: { bad_login: 'Non itilizatè oswa modpas pa bon', locked: 'Twòp eseye ki pa bon. Eseye ankò nan 10 minit.', reg_off: 'Enskripsyon an fèmen. Mande admin nan yon kont.',
+    bad_username: 'Non itilizatè dwe gen 3–30 karaktè: lèt miniskil, chif, pwen oswa tirè anba', user_exists: 'Non itilizatè sa a deja pran', short_pw: 'Modpas la bezwen omwen 6 karaktè',
+    login_required: 'Tanpri konekte', bad_session: 'Sesyon ou pa valab oswa li ekspire, tanpri konekte ankò', user_gone: 'Kont sa a pa egziste ankò',
+    pw_changed: 'Modpas la chanje, tanpri konekte ankò', admin_only: 'Se sèlman admin ki ka fè sa', wrong_pw: 'Modpas aktyèl la pa bon', tx_not_found: 'Nou pa jwenn tranzaksyon an',
+    no_perm: 'Ou pa gen pèmisyon pou fè sa', user_not_found: 'Nou pa jwenn kont lan', self_delete: 'Ou pa ka efase kont ou konekte avè l la', bad_amount: 'Montan an dwe plis pase 0',
+    no_cat: 'Chwazi oswa tape yon kategori', bad_date: 'Dat oswa lè a pa valab', bad_request: 'Demann lan pa valab', bad_action: 'Aksyon an pa valab',
+    no_sheet: 'Nou pa jwenn Google Sheet sèvè a', network: 'Nou pa ka jwenn sèvè a. Tcheke koneksyon an oswa URL Apps Script la.', server: 'Erè sèvè' }
+}};
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let LANG = L[store.get('ct_lang')] ? store.get('ct_lang') : 'vi';
+const t = (k, v) => { let s = L[LANG][k] ?? L.vi[k] ?? k; if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]); return s; };
+const errText = e => { const m = String(e && e.message || e); return L[LANG].err[m] || L.vi.err[m] || m; };
+
+const CATS = {
+  chi: ['Chi phí hàng ngày','Ăn uống','Đi lại','Mua đồ','Siêu thị','Chi phí cố định hàng tháng','Nhà ở','Điện nước & Internet','Sức khỏe','Học tập','Giải trí','Gửi về gia đình','Khác'],
+  thu: ['Lương','Thưởng','Phụ cấp','Thu khác']
+};
+const ALLC = [...CATS.chi, ...CATS.thu];
+const catName = c => L[LANG].cats[c] || c;
+const catKey = s => { s = String(s || '').trim(); for (const lg in L) for (const k of ALLC) if ((L[lg].cats[k] || k).toLowerCase() === s.toLowerCase()) return k; return s; };
+const HUES = ['#257de0','#f47230','#00b894','#f2a600','#ee7fac','#008a17','#6a4ce2','#ec4647'];
+const catColor = c => { let i = ALLC.indexOf(c); if (i < 0) { i = 0; for (const ch of c) i = (i * 31 + ch.charCodeAt(0)) >>> 0; } return HUES[i % HUES.length]; };
+const mono = c => (String(catName(c)).split(/[\s,&]+/).filter(w => /\p{L}/u.test(w[0] || '')).slice(0, 2).map(w => w[0]).join('') || '?').toUpperCase();
+
+const app = document.getElementById('app'), modal = document.getElementById('modal'), tip = document.getElementById('tip');
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function pad(n) { return String(n).padStart(2, '0'); }
+const nowLocal = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const curMonth = () => nowLocal().slice(0, 7);
+const addMonth = (m, k) => { let [y, mo] = m.split('-').map(Number); mo += k; while (mo < 1) { mo += 12; y--; } while (mo > 12) { mo -= 12; y++; } return `${y}-${pad(mo)}`; };
+const daysIn = m => new Date(+m.slice(0, 4), +m.slice(5, 7), 0).getDate();
+const monthLabel = m => L[LANG].monthFmt(+m.slice(5, 7), m.slice(0, 4));
+const dmLabel = (d, m) => L[LANG].dm(+d, +m);
+const dayLabel = d => { const dt = new Date(d + 'T00:00'); return L[LANG].dayFmt(L[LANG].days[dt.getDay()], dt.getDate(), dt.getMonth() + 1, dt.getFullYear()); };
+
+const S = { token: null, user: null, tx: [], users: [], month: curMonth(), view: 'home', viewUser: 'all', f: { q: '', type: 'all', cat: 'all' }, cur: store.get('ct_cur') || 'USD', authMode: 'login' };
+const isAdmin = () => S.user && S.user.role === 'admin';
+const fmt = n => { const v = Math.abs(+n || 0); try { return new Intl.NumberFormat(L[LANG].locale, { style: 'currency', currency: S.cur, currencyDisplay: 'narrowSymbol', maximumFractionDigits: S.cur === 'VND' ? 0 : 2 }).format(v); } catch (e) { return v.toLocaleString() + ' ' + S.cur; } };
+const fmtC = n => new Intl.NumberFormat(L[LANG].locale, { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+const niceMax = v => { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; };
+
+/* ====== BACKEND DEMO (chạy trong trình duyệt, cùng giao diện với Apps Script) ====== */
+const norm = s => String(s || '').trim().toLowerCase();
+const hashL = s => { let a = 5381, b = 52711; for (const c of s) { const k = c.charCodeAt(0); a = (a * 33) ^ k; b = (b * 31) ^ k; } return 'h' + (a >>> 0).toString(36) + (b >>> 0).toString(36); };
+function cleanTx(x) {
+  const amount = Math.round(parseFloat(x.amount) * 100) / 100;
+  if (!(amount > 0)) throw Error('bad_amount');
+  const category = String(x.category || '').trim().slice(0, 60);
+  if (!category) throw Error('no_cat');
+  const datetime = String(x.datetime || '').slice(0, 16);
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(datetime)) throw Error('bad_date');
+  return { type: x.type === 'thu' ? 'thu' : 'chi', amount, category, datetime, note: String(x.note || '').trim().slice(0, 200), fixed: !!x.fixed };
+}
+const Local = (() => {
+  function seed() {
+    const users = [
+      { username: 'admin', name: 'Quản trị viên', role: 'admin', hash: hashL('admin' + 'admin123'), created: '2026-09-01' },
+      { username: 'lan', name: 'Trần Thị Lan', role: 'user', hash: hashL('lan' + '123456'), created: '2026-09-01' },
+      { username: 'minh', name: 'Lê Văn Minh', role: 'user', hash: hashL('minh' + '123456'), created: '2026-09-01' }];
+    let r = 11; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647;
+    const tx = [], today = nowLocal(), cm = curMonth();
+    const add = (u, type, category, amt, datetime, note, fixed) => { if (datetime > today) return; tx.push({ id: 'd' + tx.length, username: u, type, category, amount: Math.round(amt * 100) / 100, datetime, note, fixed: !!fixed, created: datetime }); };
+    for (const [u, k] of [['lan', 1], ['minh', 1.25], ['admin', 1.6]]) for (const m of [addMonth(cm, -5), addMonth(cm, -4), addMonth(cm, -3), addMonth(cm, -2), addMonth(cm, -1), cm]) {
+      add(u, 'thu', 'Lương', 1450 * k, `${m}-05T09:00`, '', true);
+      add(u, 'chi', 'Nhà ở', 380 * k, `${m}-02T08:30`, '', true);
+      add(u, 'chi', 'Điện nước & Internet', 55, `${m}-03T19:10`, '', true);
+      add(u, 'chi', 'Gửi về gia đình', 300 * k, `${m}-06T20:00`, '', true);
+      if (rnd() > .45) add(u, 'thu', 'Thưởng', 100 + rnd() * 220, `${m}-25T10:00`, 'KPI');
+      for (let d = 1; d <= daysIn(m); d++) {
+        const ds = `${m}-${pad(d)}`, mi = () => pad(Math.floor(rnd() * 60));
+        add(u, 'chi', 'Ăn uống', 4 + rnd() * 12 * k, `${ds}T12:${mi()}`, '');
+        if (rnd() > .45) add(u, 'chi', 'Đi lại', 2 + rnd() * 9, `${ds}T07:${mi()}`, 'Taxi / tap-tap');
+        if (d % 6 === 0) add(u, 'chi', 'Siêu thị', 35 + rnd() * 80 * k, `${ds}T18:${mi()}`, '');
+        if (rnd() > .9) add(u, 'chi', 'Mua đồ', 20 + rnd() * 120, `${ds}T16:${mi()}`, '');
+        if (rnd() > .92) add(u, 'chi', 'Giải trí', 10 + rnd() * 40, `${ds}T21:${mi()}`, '');
+        if (rnd() > .95) add(u, 'chi', 'Sức khỏe', 8 + rnd() * 30, `${ds}T17:${mi()}`, '');
+      }
+    }
+    return { users, tx };
+  }
+  let db = store.get('ct_demo_db_v3') || seed();
+  const save = () => store.set('ct_demo_db_v3', db);
+  const pub = u => ({ username: u.username, name: u.name, role: u.role, created: u.created });
+  const auth = tk => { if (!tk) throw Error('login_required'); const u = db.users.find(x => 'demo.' + x.username === tk); if (!u) throw Error('bad_session'); return u; };
+  const admin = p => { const u = auth(p.token); if (u.role !== 'admin') throw Error('admin_only'); return u; };
+  const checkPw = p => { if (String(p || '').length < 6) throw Error('short_pw'); };
+  function newUser(p, role) {
+    const username = norm(p.username);
+    if (!/^[a-z0-9._]{3,30}$/.test(username)) throw Error('bad_username');
+    if (db.users.some(x => x.username === username)) throw Error('user_exists');
+    checkPw(p.password);
+    const u = { username, name: String(p.name || '').trim().slice(0, 60) || username, role, hash: hashL(username + p.password), created: nowLocal().slice(0, 10) };
+    db.users.push(u); save(); return u;
+  }
+  const A = {
+    login(p) { const u = db.users.find(x => x.username === norm(p.username)); if (!u || u.hash !== hashL(u.username + p.password)) throw Error('bad_login'); return { token: 'demo.' + u.username, user: pub(u) }; },
+    register(p) { newUser(p, 'user'); return A.login(p); },
+    me(p) { return { user: pub(auth(p.token)) }; },
+    listTx(p) { const u = auth(p.token); return { tx: u.role === 'admin' ? db.tx : db.tx.filter(x => x.username === u.username) }; },
+    saveTx(p) {
+      const u = auth(p.token), c = cleanTx(p.tx), ts = nowLocal();
+      if (p.tx.id) { const x = db.tx.find(y => y.id === p.tx.id); if (!x) throw Error('tx_not_found'); if (u.role !== 'admin' && x.username !== u.username) throw Error('no_perm'); Object.assign(x, c, { updated: ts }); save(); return { tx: x }; }
+      let owner = u.username; if (u.role === 'admin' && p.tx.username && db.users.some(y => y.username === p.tx.username)) owner = p.tx.username;
+      const x = { id: 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), username: owner, ...c, created: ts }; db.tx.push(x); save(); return { tx: x };
+    },
+    addMany(p) { return { tx: p.items.map(it => A.saveTx({ token: p.token, tx: it }).tx) }; },
+    deleteTx(p) { const u = auth(p.token), i = db.tx.findIndex(x => x.id === p.id); if (i < 0) throw Error('tx_not_found'); if (u.role !== 'admin' && db.tx[i].username !== u.username) throw Error('no_perm'); db.tx.splice(i, 1); save(); return {}; },
+    listUsers(p) { admin(p); return { users: db.users.map(pub) }; },
+    createUser(p) { admin(p); return { user: pub(newUser(p, p.role === 'admin' ? 'admin' : 'user')) }; },
+    deleteUser(p) { const me = admin(p), un = norm(p.username); if (un === me.username) throw Error('self_delete'); db.users = db.users.filter(x => x.username !== un); db.tx = db.tx.filter(x => x.username !== un); save(); return {}; },
+    resetPassword(p) { admin(p); const u = db.users.find(x => x.username === norm(p.username)); if (!u) throw Error('user_not_found'); checkPw(p.password); u.hash = hashL(u.username + p.password); save(); return {}; },
+    changePassword(p) { const u = auth(p.token); if (u.hash !== hashL(u.username + p.oldPassword)) throw Error('wrong_pw'); checkPw(p.newPassword); u.hash = hashL(u.username + p.newPassword); save(); return {}; },
+    updateProfile(p) { const u = auth(p.token); u.name = String(p.name || '').trim().slice(0, 60) || u.name; save(); return { user: pub(u) }; }
+  };
+  return (action, p) => new Promise((res, rej) => setTimeout(() => { try { if (!A[action]) throw Error('bad_action'); res(JSON.parse(JSON.stringify(A[action](p)))); } catch (e) { rej(e); } }, 150));
+})();
+async function remote(action, p) {
+  let r;
+  try { r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...p }) }); }
+  catch (e) { throw Error('network'); }
+  const j = await r.json().catch(() => ({ ok: false, error: 'server' }));
+  if (!j.ok) throw Error(j.error || 'server');
+  return j;
+}
+const api = (a, p = {}) => (DEMO ? Local : remote)(a, { token: S.token, ...p });
+const normTx = x => ({ ...x, id: String(x.id), amount: +x.amount || 0, type: x.type === 'thu' ? 'thu' : 'chi', datetime: String(x.datetime).slice(0, 16), note: x.note || '', fixed: x.fixed === true || String(x.fixed).toUpperCase() === 'TRUE' });
+
+/* ====== DỮ LIỆU ====== */
+const visible = () => isAdmin() && S.viewUser !== 'all' ? S.tx.filter(x => x.username === S.viewUser) : S.tx;
+const monthTx = m => visible().filter(x => x.datetime.startsWith(m));
+const sum = (T, type) => T.reduce((s, x) => s + (x.type === type ? x.amount : 0), 0);
+const uname = un => (S.users.find(u => u.username === un) || {}).name || un;
+const showOwner = () => isAdmin() && S.viewUser === 'all';
+
+/* ====== ICONS ====== */
+const LOGO = '<svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#e6f5c8"/><path d="M7 19l4.5-4.5 3 3L21 11" stroke="#00463c" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const I = {
+  home: '<svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  list: '<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
+  users: '<svg viewBox="0 0 24 24"><path d="M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM22 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg>',
+  cog: '<svg viewBox="0 0 24 24"><path d="M4 6h9m4 0h3M4 12h3m4 0h9M4 18h11m4 0h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>'
+};
+const langSwitch = () => `<div class="lang" role="group" aria-label="${t('language')}">${[['vi', 'VI', 'Tiếng Việt'], ['en', 'EN', 'English'], ['ht', 'HT', 'Kreyòl ayisyen']].map(([k, s, n]) => `<button data-lang="${k}" class="${LANG === k ? 'on' : ''}" title="${n}" aria-pressed="${LANG === k}">${s}</button>`).join('')}</div>`;
+function setLang(k) {
+  if (!L[k] || k === LANG) return;
+  LANG = k; store.set('ct_lang', k); document.documentElement.lang = k === 'ht' ? 'ht' : k; document.title = t('appName');
+  if (!modal.hidden) closeModal();
+  if (S.user) renderApp(); else renderLogin(S.authMode);
+}
+
+/* ====== ĐĂNG NHẬP / TẠO TÀI KHOẢN ====== */
+function renderLogin(mode = 'login', msg = '') {
+  S.authMode = mode;
+  const reg = mode === 'register';
+  app.innerHTML = `<main class="auth">
+  <section class="auth-brand">
+    <div class="logo">${LOGO}<span>${t('appName')}</span></div>
+    <div><h1>${t('authTitle')}</h1><p>${t('authSub')}</p></div>
+    <svg class="auth-art" viewBox="0 0 460 290" aria-hidden="true">
+      <ellipse cx="230" cy="274" rx="185" ry="12" fill="#00000030"/>
+      <g transform="rotate(-5 230 150)">
+        <rect x="64" y="46" width="304" height="214" rx="18" fill="#0b5d4f"/>
+        <rect x="80" y="32" width="304" height="214" rx="18" fill="#e6f5c8"/>
+        <path d="M98 32h268a18 18 0 0 1 18 18v28H80V50a18 18 0 0 1 18-18z" fill="#cbe89f"/>
+        <rect x="104" y="48" width="90" height="12" rx="6" fill="#00463c"/><rect x="300" y="48" width="60" height="12" rx="6" fill="#00463c55"/>
+        <g stroke="#00463c1f" stroke-width="2">${[112, 140, 168, 196, 224].map(y => `<line x1="104" x2="360" y1="${y}" y2="${y}"/>`).join('')}</g>
+        <path d="M104 214L150 196 196 204 242 168 288 160 352 116V228H104Z" fill="#00463c14"/>
+        <path d="M104 214L150 196 196 204 242 168 288 160 352 116" fill="none" stroke="#00463c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M104 222L150 216 196 220 242 206 288 210 352 196" fill="none" stroke="#ff6f59" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="352" cy="116" r="9" fill="#00463c" stroke="#e6f5c8" stroke-width="4"/>
+      </g>
+      <g>${[0, 1, 2, 3].map(i => `<ellipse cx="398" cy="${252 - i * 14}" rx="36" ry="12" fill="#d9a62e"/><ellipse cx="398" cy="${246 - i * 14}" rx="36" ry="12" fill="#f2c14e"/>`).join('')}</g>
+    </svg>
+  </section>
+  <section class="auth-form">
+    <div class="auth-lang">${langSwitch()}</div>
+    <form class="card form" id="fAuth" novalidate>
+      <div class="seg"><button type="button" data-mode="login" class="${reg ? '' : 'on'}">${t('login')}</button><button type="button" data-mode="register" class="${reg ? 'on' : ''}">${t('register')}</button></div>
+      <label>${t('username')}<input class="in" id="aUser" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label>${t('password')}<input class="in" id="aPass" type="password" autocomplete="${reg ? 'new-password' : 'current-password'}" required></label>
+      ${reg ? `<label>${t('password2')}<input class="in" id="aPass2" type="password" autocomplete="new-password" required></label>
+      <label>${t('fullNameOpt')}<input class="in" id="aName" autocomplete="name"></label><p class="hint">${t('regHint')}</p>` : ''}
+      <button class="btn primary" id="aBtn">${reg ? t('btnRegister') : t('login')}</button>
+      <p class="err" id="aErr">${esc(msg)}</p>
+      ${DEMO ? `<div class="demo-note">${t('demoNote', { a: '<b>admin</b> / <b>admin123</b>', u: '<b>lan</b> / <b>123456</b>' })}</div>` : ''}
+    </form>
+  </section></main>`;
+  app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => renderLogin(b.dataset.mode));
+  document.getElementById('fAuth').onsubmit = async e => {
+    e.preventDefault();
+    const btn = document.getElementById('aBtn'), err = document.getElementById('aErr');
+    const p = { username: document.getElementById('aUser').value, password: document.getElementById('aPass').value };
+    if (!p.username || !p.password) { err.textContent = t('needUserPass'); return; }
+    if (reg) {
+      if (p.password !== document.getElementById('aPass2').value) { err.textContent = t('pwMismatch'); return; }
+      p.name = document.getElementById('aName').value;
+    }
+    btn.disabled = true; err.textContent = '';
+    try { const r = await api(reg ? 'register' : 'login', p); S.token = r.token; S.user = r.user; store.set('ct_token', r.token); await loadData(); S.view = 'home'; renderApp(); }
+    catch (x) { err.textContent = errText(x); btn.disabled = false; }
+  };
+}
+async function loadData() {
+  const r = await api('listTx');
+  S.tx = (r.tx || []).map(normTx);
+  S.users = isAdmin() ? (await api('listUsers')).users : [S.user];
+  if (!S.users.some(u => u.username === S.viewUser)) S.viewUser = 'all';
+}
+
+/* ====== KHUNG APP ====== */
+function renderApp() {
+  const nav = [['home', t('nav_home'), I.home], ['tx', t('nav_tx'), I.list], ...(isAdmin() ? [['users', t('nav_users'), I.users]] : []), ['settings', t('nav_settings'), I.cog]];
+  const navBtns = nav.map(n => `<button data-nav="${n[0]}" class="${S.view === n[0] ? 'on' : ''}" aria-label="${n[1]}">${n[2]}<span>${n[1]}</span></button>`).join('');
+  app.innerHTML = `<header class="top"><div class="wrap top-in">
+    <div class="logo">${LOGO}<span>${t('appName')}</span>${DEMO ? '<em class="pill">Demo</em>' : ''}</div>
+    <nav class="tabs">${navBtns}</nav>
+    <button class="btn lime add-d" data-add>+ ${t('addTx')}</button>
+    ${langSwitch()}
+  </div></header>
+  <main id="view"></main>
+  <nav class="bnav">${navBtns}</nav>
+  <button class="fab" data-add aria-label="${t('addTx')}">${I.plus}</button>`;
+  renderView();
+}
+let ro;
+function renderView() {
+  const v = document.getElementById('view'); if (!v) return;
+  if (ro) { ro.disconnect(); ro = null; }
+  tip.hidden = true;
+  if (S.view === 'users' && !isAdmin()) S.view = 'home';
+  v.innerHTML = { home: vHome, tx: vTx, users: vUsers, settings: vSettings }[S.view]();
+  if (S.view === 'home') { ro = new ResizeObserver(() => { drawCum(); drawTrend(); }); ['chCum', 'chTrend'].forEach(id => ro.observe(document.getElementById(id))); }
+  if (S.view === 'tx') { bindTx(); renderTxList(); }
+  if (S.view === 'users') bindUsers();
+  if (S.view === 'settings') bindSettings();
+}
+const ctx = () => `<div class="ctx">
+  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px"><div class="mpick"><button data-m="-1" aria-label="${t('prevMonth')}">‹</button><span>${monthLabel(S.month)}</span><button data-m="1" aria-label="${t('nextMonth')}">›</button></div>${S.month !== curMonth() ? `<button class="today" data-today>${t('thisMonth')}</button>` : ''}</div>
+  ${isAdmin() ? `<label class="upick">${t('view')}<select id="uSel"><option value="all">${t('allUsers')}</option>${S.users.map(u => `<option value="${esc(u.username)}" ${S.viewUser === u.username ? 'selected' : ''}>${esc(u.name)} (${esc(u.username)})</option>`).join('')}</select></label>` : ''}
+</div>`;
+const empty = s => `<div class="empty">${s}</div>`;
+const delta = (cur, prev) => { if (!prev) return t('noPrev'); const p = Math.round((cur - prev) / prev * 100); return t('vsPrev', { a: p > 0 ? '▲' : p < 0 ? '▼' : '=', p: Math.abs(p) }); };
+function txRows(list) {
+  if (!list.length) return empty(t('noTx'));
+  const own = showOwner();
+  return `<ul class="rows">${list.map(x => `<li class="row" data-edit="${esc(x.id)}" tabindex="0">
+    <span class="badge" style="--c:${catColor(x.category)}">${esc(mono(x.category))}</span>
+    <div class="rt"><b>${esc(catName(x.category))}${x.fixed ? `<small class="tag">${t('fixed')}</small>` : ''}</b><span>${esc(x.note || (x.type === 'thu' ? t('income') : t('expense')))}</span></div>
+    <div class="ra"><b class="${x.type}">${x.type === 'thu' ? '+' : '−'}${fmt(x.amount)}</b><span>${x.datetime.slice(11)} · ${dmLabel(x.datetime.slice(8, 10), x.datetime.slice(5, 7))}${own ? ' · ' + esc(uname(x.username)) : ''}</span></div></li>`).join('')}</ul>`;
+}
+
+/* ====== TỔNG QUAN ====== */
+function fixedTodo() {
+  if (S.month > curMonth()) return [];
+  const me = isAdmin() && S.viewUser !== 'all' ? S.viewUser : S.user.username;
+  const prev = S.tx.filter(x => x.username === me && x.fixed && x.datetime.startsWith(addMonth(S.month, -1)));
+  const cur = S.tx.filter(x => x.username === me && x.datetime.startsWith(S.month));
+  return prev.filter(p => !cur.some(c => c.type === p.type && c.category === p.category && c.note === p.note));
+}
+function vHome() {
+  const m = S.month, T = monthTx(m), thu = sum(T, 'thu'), chi = sum(T, 'chi'), bal = thu - chi;
+  const P = monthTx(addMonth(m, -1));
+  const passed = m === curMonth() ? new Date().getDate() : daysIn(m);
+  const by = {}; T.filter(x => x.type === 'chi').forEach(x => by[x.category] = (by[x.category] || 0) + x.amount);
+  const cats = Object.entries(by).sort((a, b) => b[1] - a[1]), mx = cats[0] ? cats[0][1] : 1;
+  const recent = [...T].sort((a, b) => b.datetime.localeCompare(a.datetime)).slice(0, 6);
+  const todo = fixedTodo();
+  const who = isAdmin() ? ' · ' + (S.viewUser === 'all' ? t('allUsers') : esc(uname(S.viewUser))) : '';
+  const legend = `<div class="legend"><span><i></i>${t('inc')}</span><span><i class="exp"></i>${t('exp')}</span></div>`;
+  return `<section class="hero"><div class="wrap">${ctx()}
+    <div class="hero-grid">
+      <div><div class="lbl">${t('leftIn', { m: monthLabel(m) })}${who}</div>
+        <div class="big ${bal < 0 ? 'neg' : ''}">${bal < 0 ? '−' : ''}${fmt(bal)}</div>
+        <div class="sub">${thu > 0 ? (bal >= 0 ? t('saved', { p: Math.round(bal / thu * 100) }) : t('overspent', { x: fmt(-bal) })) : t('noIncome')}</div></div>
+      <div class="figs">
+        <div class="fig-i"><div class="lbl"><span class="dot inc"></span>${t('totalInc')}</div><div class="num">${fmt(thu)}</div><div class="d">${delta(thu, sum(P, 'thu'))}</div></div>
+        <div class="fig-i"><div class="lbl"><span class="dot exp"></span>${t('totalExp')}</div><div class="num">${fmt(chi)}</div><div class="d">${delta(chi, sum(P, 'chi'))}</div></div>
+        <div class="fig-i"><div class="lbl">${t('avgDay')}</div><div class="num">${fmt(passed ? chi / passed : 0)}</div><div class="d">${t('nTxMonth', { n: T.length })}</div></div>
+      </div>
+    </div></div></section>
+  <section class="wrap grid">
+    ${todo.length ? `<div class="card fixbn"><div><b>${t('fixedBanner', { n: todo.length, m: monthLabel(m) })}</b><div style="font-size:14px">${esc(todo.map(x => catName(x.category)).join(', '))}</div></div><button class="btn" data-fixed>${t('addAll')}</button></div>` : ''}
+    <article class="card span2"><header class="ch"><h2>${t('chCum')}</h2>${legend}</header><div class="fig"><svg id="chCum" role="img" aria-label="${t('chCum')}"></svg></div></article>
+    <article class="card"><header class="ch"><h2>${t('byCat')}</h2><span class="legend">${fmt(chi)}</span></header>
+      ${cats.length ? cats.map(([c, v]) => `<button class="cb" data-cat="${esc(c)}"><div class="cb-t"><span class="badge" style="--c:${catColor(c)}">${esc(mono(c))}</span><span class="nm">${esc(catName(c))}</span><span class="v">${fmt(v)}</span></div><div class="cb-bar"><div><i style="width:${(v / mx * 100).toFixed(1)}%"></i></div><em>${Math.round(v / chi * 100)}%</em></div></button>`).join('') : empty(t('noExpMonth'))}</article>
+    <article class="card span2"><header class="ch"><h2>${t('trend6')}</h2>${legend}</header><div class="fig sm"><svg id="chTrend" role="img" aria-label="${t('trend6')}"></svg></div></article>
+    <article class="card"><header class="ch"><h2>${t('recent')}</h2><button class="link" data-nav="tx">${t('seeAll')}</button></header>${txRows(recent)}</article>
+  </section>`;
+}
+function showTip(e, html) {
+  tip.innerHTML = html; tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight; let x = e.clientX + 14, y = e.clientY - h - 12;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (x < 8) x = 8; if (y < 8) y = e.clientY + 16;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+const hideTip = () => { tip.hidden = true; };
+function drawCum() {
+  const s = document.getElementById('chCum'); if (!s) return; const W = s.clientWidth, H = s.clientHeight; if (!W) return;
+  const m = S.month, nd = daysIn(m), T = monthTx(m), daily = Array.from({ length: nd }, () => ({ thu: 0, chi: 0 }));
+  T.forEach(x => { const k = +x.datetime.slice(8, 10) - 1; if (daily[k]) daily[k][x.type] += x.amount; });
+  let last = m < curMonth() ? nd : m === curMonth() ? new Date().getDate() : 0;
+  daily.forEach((d, i) => { if (d.thu || d.chi) last = Math.max(last, i + 1); });
+  let a = 0, b = 0; const D = daily.map((d, i) => (a += d.thu, b += d.chi, { day: i + 1, thu: a, chi: b, dt: d.thu, dc: d.chi })).slice(0, Math.max(last, 1));
+  const narrow = W < 520, pl = narrow ? 6 : 52, pr = narrow ? 70 : 92, pt = 14, pb = 26;
+  const max = niceMax(Math.max(1, ...D.map(p => Math.max(p.thu, p.chi))));
+  const X = i => pl + (W - pl - pr) * i / (nd - 1), Y = v => pt + (H - pt - pb) * (1 - v / max);
+  let g = '';
+  for (let k = 0; k <= 4; k++) { const y = Y(max * k / 4); g += `<line class="gl" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/>`; if (!narrow) g += `<text x="${pl - 8}" y="${y + 4}" text-anchor="end">${fmtC(max * k / 4)}</text>`; }
+  [1, 5, 10, 15, 20, 25, nd].forEach(d => { if (narrow && d % 10 && d !== 1 && d !== nd) return; g += `<text x="${X(d - 1)}" y="${H - 6}" text-anchor="middle">${d}</text>`; });
+  const line = k => D.map((p, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(p[k]).toFixed(1)}`).join('');
+  const area = k => `${line(k)}L${X(D.length - 1)},${Y(0)}L${X(0)},${Y(0)}Z`;
+  const E = D[D.length - 1]; let yi = Y(E.thu), ye = Y(E.chi);
+  if (Math.abs(yi - ye) < 30) { const mid = (yi + ye) / 2, up = E.thu >= E.chi; yi = mid + (up ? -15 : 15); ye = mid + (up ? 15 : -15); }
+  const xe = X(D.length - 1);
+  g += `<path class="a-exp" d="${area('chi')}"/><path class="l-inc" d="${line('thu')}"/><path class="l-exp" d="${line('chi')}"/>
+    <circle cx="${xe}" cy="${Y(E.thu)}" r="4" class="b-inc"/><circle cx="${xe}" cy="${Y(E.chi)}" r="4" class="b-exp"/>
+    <text x="${xe + 8}" y="${yi - 2}" class="lbl-s">${t('inc')}</text><text x="${xe + 8}" y="${yi + 12}">${fmtC(E.thu)}</text>
+    <text x="${xe + 8}" y="${ye - 2}" class="lbl-s">${t('exp')}</text><text x="${xe + 8}" y="${ye + 12}">${fmtC(E.chi)}</text>
+    <g class="hov" id="cumHov" style="display:none"><line y1="${pt}" y2="${Y(0)}"/><circle r="5" class="b-inc"/><circle r="5" class="b-exp"/></g>
+    <rect x="${pl}" y="0" width="${W - pl - pr}" height="${H}" fill="transparent" id="cumHit"/>`;
+  s.innerHTML = g;
+  const hit = s.querySelector('#cumHit'), hov = s.querySelector('#cumHov');
+  const move = e => {
+    const r = s.getBoundingClientRect(); let i = Math.round((e.clientX - r.left - pl) / ((W - pl - pr) / (nd - 1))); i = Math.max(0, Math.min(D.length - 1, i));
+    const p = D[i], x = X(i); hov.style.display = ''; hov.children[0].setAttribute('x1', x); hov.children[0].setAttribute('x2', x);
+    hov.children[1].setAttribute('cx', x); hov.children[1].setAttribute('cy', Y(p.thu)); hov.children[2].setAttribute('cx', x); hov.children[2].setAttribute('cy', Y(p.chi));
+    showTip(e, `<b>${dmLabel(p.day, m.slice(5))}</b><div><span>${t('cumInc')}</span><span>${fmt(p.thu)}</span></div><div><span>${t('cumExp')}</span><span>${fmt(p.chi)}</span></div><div><span>${t('inDay')}</span><span>+${fmt(p.dt)} / −${fmt(p.dc)}</span></div>`);
+  };
+  hit.addEventListener('pointermove', move); hit.addEventListener('pointerdown', move);
+  hit.addEventListener('pointerleave', () => { hov.style.display = 'none'; hideTip(); });
+}
+function barPath(x, y, w, h, r) { if (h <= 0.5) return ''; r = Math.min(r, h, w / 2); return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; }
+function drawTrend() {
+  const s = document.getElementById('chTrend'); if (!s) return; const W = s.clientWidth, H = s.clientHeight; if (!W) return;
+  const ms = [-5, -4, -3, -2, -1, 0].map(k => addMonth(S.month, k)).map(m => { const T = monthTx(m); return { m, thu: sum(T, 'thu'), chi: sum(T, 'chi') }; });
+  const narrow = W < 520, pl = narrow ? 6 : 52, pr = 6, pt = 10, pb = 26, max = niceMax(Math.max(1, ...ms.map(d => Math.max(d.thu, d.chi))));
+  const gw = (W - pl - pr) / 6, bw = Math.min(30, (gw - 18) / 2), Y = v => pt + (H - pt - pb) * (1 - v / max), y0 = Y(0);
+  let g = '';
+  for (let k = 0; k <= 4; k++) { const y = Y(max * k / 4); g += `<line class="gl" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/>`; if (!narrow) g += `<text x="${pl - 8}" y="${y + 4}" text-anchor="end">${fmtC(max * k / 4)}</text>`; }
+  ms.forEach((d, i) => {
+    const cx = pl + gw * i + gw / 2;
+    g += `<path class="b-inc" d="${barPath(cx - bw - 1, Y(d.thu), bw, y0 - Y(d.thu), 4)}"/><path class="b-exp" d="${barPath(cx + 1, Y(d.chi), bw, y0 - Y(d.chi), 4)}"/>
+      <text x="${cx}" y="${H - 6}" text-anchor="middle" class="${d.m === S.month ? 'lbl-s' : ''}">${L[LANG].mshort[+d.m.slice(5) - 1]}${narrow ? '' : ' ' + d.m.slice(2, 4)}</text>
+      <rect x="${pl + gw * i}" y="0" width="${gw}" height="${H}" fill="transparent" data-i="${i}" style="cursor:pointer"/>`;
+  });
+  s.innerHTML = g;
+  s.querySelectorAll('rect[data-i]').forEach(r => {
+    const d = ms[+r.dataset.i], f = e => showTip(e, `<b>${monthLabel(d.m)}</b><div><span>${t('inc')}</span><span>${fmt(d.thu)}</span></div><div><span>${t('exp')}</span><span>${fmt(d.chi)}</span></div><div><span>${t('left')}</span><span>${d.thu - d.chi < 0 ? '−' : ''}${fmt(d.thu - d.chi)}</span></div>`);
+    r.addEventListener('pointermove', f); r.addEventListener('pointerleave', hideTip);
+    r.addEventListener('click', () => { S.month = d.m; renderView(); });
+  });
+}
+
+/* ====== GIAO DỊCH ====== */
+function vTx() {
+  const cats = [...new Set([...ALLC, ...visible().map(x => x.category)])];
+  return `<section class="hero slim"><div class="wrap">${ctx()}<h1>${t('txTitle', { m: monthLabel(S.month) })}</h1></div></section>
+  <section class="wrap">
+    <div class="card filters">
+      <input id="fq" type="search" placeholder="${t('search')}" value="${esc(S.f.q)}" aria-label="${t('search')}">
+      <div class="seg" id="ftype">${[['all', t('all')], ['chi', t('exp')], ['thu', t('inc')]].map(([k, l]) => `<button data-ft="${k}" class="${S.f.type === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+      <select id="fcat" aria-label="${t('category')}"><option value="all">${t('allCats')}</option>${cats.map(c => `<option value="${esc(c)}" ${S.f.cat === c ? 'selected' : ''}>${esc(catName(c))}</option>`).join('')}</select>
+      <button class="btn ghost" id="csv">${t('csv')}</button>
+    </div>
+    <div id="txList"></div>
+  </section>`;
+}
+function filteredTx() {
+  const q = norm(S.f.q);
+  return monthTx(S.month).filter(x => (S.f.type === 'all' || x.type === S.f.type) && (S.f.cat === 'all' || x.category === S.f.cat) &&
+    (!q || norm(`${x.category} ${catName(x.category)} ${x.note} ${x.amount} ${uname(x.username)}`).includes(q))).sort((a, b) => b.datetime.localeCompare(a.datetime));
+}
+function renderTxList() {
+  const box = document.getElementById('txList'); if (!box) return;
+  const T = filteredTx(), groups = [];
+  T.forEach(x => { const d = x.datetime.slice(0, 10); if (!groups.length || groups[groups.length - 1].d !== d) groups.push({ d, items: [] }); groups[groups.length - 1].items.push(x); });
+  box.innerHTML = `<div class="sumline"><span>${t('nTx', { n: T.length })}</span><span>${t('inc')} <b class="thu">+${fmt(sum(T, 'thu'))}</b></span><span>${t('exp')} <b class="chi">−${fmt(sum(T, 'chi'))}</b></span></div>
+    ${groups.length ? groups.map(g => { const n = sum(g.items, 'thu') - sum(g.items, 'chi'); return `<div class="card day"><div class="dh"><span>${dayLabel(g.d)}</span><span class="tnum">${n >= 0 ? '+' : '−'}${fmt(n)}</span></div>${txRows(g.items)}</div>`; }).join('')
+      : `<div class="card">${empty(t('noMatch'))}</div>`}`;
+}
+function bindTx() {
+  document.getElementById('fq').oninput = e => { S.f.q = e.target.value; renderTxList(); };
+  document.getElementById('fcat').onchange = e => { S.f.cat = e.target.value; renderTxList(); };
+  document.querySelectorAll('[data-ft]').forEach(b => b.onclick = () => { S.f.type = b.dataset.ft; document.querySelectorAll('[data-ft]').forEach(x => x.classList.toggle('on', x === b)); renderTxList(); });
+  document.getElementById('csv').onclick = () => {
+    const rows = filteredTx().map(x => [x.datetime.replace('T', ' '), x.username, uname(x.username), x.type === 'thu' ? t('inc') : t('exp'), catName(x.category), x.amount, x.note, x.fixed ? t('yes') : '']);
+    const csv = '﻿' + [[t('hdrDate'), t('account'), t('fullName'), t('hdrType'), t('category'), t('amount'), t('note'), t('fixed')], ...rows].map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+    try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = `thu-chi-${S.month}.csv`; document.body.appendChild(a); a.click(); a.remove(); toast(DEMO ? t('csvDemo') : t('csvDone')); } catch (e) { toast(t('csvBlocked')); }
+  };
+}
+
+/* ====== FORM GIAO DỊCH ====== */
+function openTx(x) {
+  const isNew = !x;
+  const forUser = isAdmin() && S.viewUser !== 'all' ? S.viewUser : S.user.username;
+  x = x ? { ...x } : { type: 'chi', category: '', amount: '', datetime: S.month === curMonth() ? nowLocal() : `${S.month}-01T12:00`, note: '', fixed: false, username: forUser };
+  openModal(`<form class="sheet" id="fTx" novalidate>
+    <header><h2>${isNew ? t('addTx') : t('editTx')}</h2><button type="button" class="x" data-close aria-label="${t('close')}">×</button></header>
+    <div class="seg ttype">${['chi', 'thu'].map(k => `<button type="button" data-t="${k}" class="${x.type === k ? 'on' : ''}">${k === 'chi' ? t('expense') : t('income')}</button>`).join('')}</div>
+    <label class="amt">${t('amountCur', { c: esc(S.cur) })}<input id="tAmt" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" value="${x.amount === '' ? '' : esc(x.amount)}" required></label>
+    <div class="f">${t('category')}<div class="chips" id="tChips"></div><input class="in" id="tCat" placeholder="${t('otherCat')}" value="${esc(x.category ? catName(x.category) : '')}" maxlength="60"></div>
+    <div class="two" style="margin-top:12px"><label class="f">${t('dateTime')}<input class="in" id="tDt" type="datetime-local" value="${esc(x.datetime)}" required></label>
+    <label class="f">${t('note')}<input class="in" id="tNote" value="${esc(x.note)}" maxlength="200" placeholder="${t('notePh')}"></label></div>
+    <label class="chk"><input type="checkbox" id="tFix" ${x.fixed ? 'checked' : ''}>${t('fixedChk')}</label>
+    ${isAdmin() && x.username !== S.user.username ? `<p class="hint" style="margin-top:10px">${t('txOf')} <b>${esc(uname(x.username))}</b></p>` : ''}
+    <p class="err" id="tErr"></p>
+    <footer>${isNew ? `<button type="button" class="btn ghost" data-close>${t('cancel')}</button>` : `<button type="button" class="btn danger" id="tDel">${t('del')}</button>`}<button class="btn primary" id="tSave">${isNew ? t('saveTx') : t('saveChanges')}</button></footer>
+  </form>`);
+  const catIn = document.getElementById('tCat');
+  const chips = () => {
+    const used = [...new Set(S.tx.filter(y => y.type === x.type).map(y => y.category))];
+    const list = [...new Set([...CATS[x.type], ...used])], cur = catKey(catIn.value);
+    document.getElementById('tChips').innerHTML = list.map(c => `<button type="button" class="chip ${c === cur ? 'on' : ''}" style="--c:${catColor(c)}" data-c="${esc(c)}">${esc(catName(c))}</button>`).join('');
+    document.querySelectorAll('#tChips .chip').forEach(b => b.onclick = () => { catIn.value = catName(b.dataset.c); chips(); });
+  };
+  chips();
+  catIn.oninput = () => { const k = catKey(catIn.value); document.querySelectorAll('#tChips .chip').forEach(b => b.classList.toggle('on', b.dataset.c === k)); };
+  modal.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+    x.type = b.dataset.t; modal.querySelectorAll('[data-t]').forEach(y => y.classList.toggle('on', y === b));
+    const k = catKey(catIn.value); if (ALLC.includes(k) && !CATS[x.type].includes(k)) catIn.value = ''; chips();
+  });
+  if (isNew) setTimeout(() => document.getElementById('tAmt').focus(), 60);
+  document.getElementById('fTx').onsubmit = async e => {
+    e.preventDefault();
+    const btn = document.getElementById('tSave'), err = document.getElementById('tErr');
+    const data = { id: x.id, username: x.username, type: x.type, amount: document.getElementById('tAmt').value, category: catKey(catIn.value), datetime: document.getElementById('tDt').value, note: document.getElementById('tNote').value, fixed: document.getElementById('tFix').checked };
+    try { cleanTx(data); } catch (y) { err.textContent = errText(y); return; }
+    btn.disabled = true; err.textContent = '';
+    try {
+      const r = await api('saveTx', { tx: data }), nt = normTx(r.tx), i = S.tx.findIndex(y => y.id === nt.id);
+      if (i >= 0) S.tx[i] = nt; else S.tx.push(nt);
+      closeModal(); if (!nt.datetime.startsWith(S.month)) S.month = nt.datetime.slice(0, 7); renderView(); toast(isNew ? t('savedTx') : t('updated'));
+    } catch (y) { err.textContent = errText(y); btn.disabled = false; }
+  };
+  const del = document.getElementById('tDel');
+  if (del) del.onclick = async () => {
+    const orig = S.tx.find(y => y.id === x.id);
+    if (!await ask(t('delTxQ'), `${catName(x.category)} · ${fmt(x.amount)} · ${x.datetime.replace('T', ' ')}. ${t('noUndo')}`, t('del'), true)) return openTx(orig);
+    try { await api('deleteTx', { id: x.id }); S.tx = S.tx.filter(y => y.id !== x.id); renderView(); toast(t('deletedTx')); } catch (y) { toast(errText(y)); }
+  };
+}
+
+/* ====== NGƯỜI DÙNG (ADMIN) ====== */
+function vUsers() {
+  const m = S.month;
+  return `<section class="hero slim"><div class="wrap"><div class="ctx" style="padding-bottom:4px"></div><h1>${t('usersTitle')}</h1><p class="lead">${t('usersLead')}</p></div></section>
+  <section class="wrap grid">
+    <article class="card"><header class="ch"><h2>${t('newUser')}</h2></header>
+      <form class="form" id="fNewU" novalidate>
+        <label>${t('username')}<input class="in" id="nuUser" autocapitalize="none" spellcheck="false" required></label>
+        <label>${t('password')}<input class="in" id="nuPass" type="text" required></label>
+        <label>${t('fullNameOpt')}<input class="in" id="nuName"></label>
+        <label>${t('role')}<select id="nuRole"><option value="user">${t('roleUser')}</option><option value="admin">${t('roleAdmin')}</option></select></label>
+        <p class="hint">${t('regHint')}</p>
+        <button class="btn primary">${t('register')}</button><p class="err" id="nuErr"></p>
+      </form></article>
+    <article class="card span2"><header class="ch"><h2>${t('userList', { n: S.users.length })}</h2><span class="legend">${t('figuresFor', { m: monthLabel(m) })}</span></header>
+      <table class="tbl stack"><thead><tr><th>${t('fullName')}</th><th>${t('username')}</th><th>${t('role')}</th><th class="r">${t('inc')}</th><th class="r">${t('exp')}</th><th class="r">${t('nTxShort')}</th><th></th></tr></thead><tbody>
+      ${S.users.map(u => { const T = S.tx.filter(x => x.username === u.username && x.datetime.startsWith(m)); return `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.username)}</td><td><span class="role ${u.role === 'admin' ? 'admin' : ''}">${u.role === 'admin' ? t('roleAdmin') : t('regular')}</span></td>
+        <td class="r thu">${fmt(sum(T, 'thu'))}</td><td class="r chi">${fmt(sum(T, 'chi'))}</td><td class="r">${S.tx.filter(x => x.username === u.username).length}</td>
+        <td><div class="acts"><button class="btn sm ghost" data-uview="${esc(u.username)}">${t('viewBtn')}</button><button class="btn sm ghost" data-ureset="${esc(u.username)}">${t('resetPw')}</button>${u.username !== S.user.username ? `<button class="btn sm danger" data-udel="${esc(u.username)}">${t('del')}</button>` : ''}</div></td></tr>`; }).join('')}
+      </tbody></table></article>
+  </section>`;
+}
+function bindUsers() {
+  document.getElementById('fNewU').onsubmit = async e => {
+    e.preventDefault(); const err = document.getElementById('nuErr'), btn = e.target.querySelector('button');
+    btn.disabled = true; err.textContent = '';
+    try { await api('createUser', { name: document.getElementById('nuName').value, username: document.getElementById('nuUser').value, password: document.getElementById('nuPass').value, role: document.getElementById('nuRole').value }); S.users = (await api('listUsers')).users; renderView(); toast(t('userCreated')); }
+    catch (x) { err.textContent = errText(x); btn.disabled = false; }
+  };
+  document.querySelectorAll('[data-uview]').forEach(b => b.onclick = () => { S.viewUser = b.dataset.uview; S.view = 'home'; renderApp(); });
+  document.querySelectorAll('[data-udel]').forEach(b => b.onclick = async () => {
+    const un = b.dataset.udel; if (!await ask(t('delUserQ'), t('delUserMsg', { n: uname(un), u: un }), t('delUserBtn'), true)) return;
+    try { await api('deleteUser', { username: un }); S.users = S.users.filter(u => u.username !== un); S.tx = S.tx.filter(x => x.username !== un); if (S.viewUser === un) S.viewUser = 'all'; renderView(); toast(t('userDeleted')); } catch (x) { toast(errText(x)); }
+  });
+  document.querySelectorAll('[data-ureset]').forEach(b => b.onclick = () => {
+    const un = b.dataset.ureset;
+    openModal(`<form class="sheet sm" id="fRs"><header><h2>${t('resetTitle')}</h2><button type="button" class="x" data-close aria-label="${t('close')}">×</button></header><p class="hint">${t('account')}: <b>${esc(uname(un))}</b> (${esc(un)})</p>
+      <label class="f" style="margin-top:12px">${t('newPw')}<input class="in" id="rsPass" type="text" required></label><p class="err" id="rsErr"></p>
+      <footer><button type="button" class="btn ghost" data-close>${t('cancel')}</button><button class="btn primary">${t('savePw')}</button></footer></form>`);
+    document.getElementById('fRs').onsubmit = async e => { e.preventDefault(); try { await api('resetPassword', { username: un, password: document.getElementById('rsPass').value }); closeModal(); toast(t('pwReset')); } catch (x) { document.getElementById('rsErr').textContent = errText(x); } };
+  });
+}
+
+/* ====== CÀI ĐẶT ====== */
+function vSettings() {
+  return `<section class="hero slim"><div class="wrap"><div class="ctx" style="padding-bottom:4px"></div><h1>${t('settingsTitle')}</h1><p class="lead">${t('loggedAs', { n: esc(S.user.name), u: esc(S.user.username), r: isAdmin() ? t('roleAdmin') : t('roleUser') })}</p></div></section>
+  <section class="wrap grid">
+    <article class="card"><header class="ch"><h2>${t('profile')}</h2></header><form class="form" id="fProf">
+      <label>${t('fullName')}<input class="in" id="pfName" value="${esc(S.user.name)}"></label>
+      <label>${t('currency')}<select id="pfCur">${[['USD', 'USD – $'], ['HTG', 'HTG – Gourde'], ['VND', 'VND – ₫'], ['EUR', 'EUR – €']].map(([k, l]) => `<option value="${k}" ${S.cur === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <p class="hint">${t('curHint')}</p>
+      <button class="btn primary">${t('save')}</button></form></article>
+    <article class="card"><header class="ch"><h2>${t('changePw')}</h2></header><form class="form" id="fPw">
+      <label>${t('curPw')}<input class="in" id="pwOld" type="password" autocomplete="current-password"></label>
+      <label>${t('newPw')}<input class="in" id="pwNew" type="password" autocomplete="new-password"></label>
+      <label>${t('password2')}<input class="in" id="pwNew2" type="password" autocomplete="new-password"></label>
+      <button class="btn primary">${t('changePw')}</button><p class="err" id="pwErr"></p></form></article>
+    <article class="card"><header class="ch"><h2>${t('data')}</h2></header>
+      <dl class="kv"><dt>${t('storage')}</dt><dd>${DEMO ? t('storDemo') : t('storSheet')}</dd><dt>${t('nav_tx')}</dt><dd>${S.tx.length}</dd>${isAdmin() ? `<dt>${t('account')}</dt><dd>${S.users.length}</dd>` : ''}</dl>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn ghost" id="reload">${t('reload')}</button>${DEMO ? `<button class="btn ghost" id="resetDemo">${t('resetDemo')}</button>` : ''}<button class="btn danger" id="logout">${t('logout')}</button></div></article>
+  </section>`;
+}
+function bindSettings() {
+  document.getElementById('fProf').onsubmit = async e => {
+    e.preventDefault(); S.cur = document.getElementById('pfCur').value; store.set('ct_cur', S.cur);
+    const name = document.getElementById('pfName').value.trim();
+    try { if (name && name !== S.user.name) { S.user = (await api('updateProfile', { name })).user; const u = S.users.find(x => x.username === S.user.username); if (u) u.name = S.user.name; } renderView(); toast(t('savedOk')); } catch (x) { toast(errText(x)); }
+  };
+  document.getElementById('fPw').onsubmit = async e => {
+    e.preventDefault(); const err = document.getElementById('pwErr');
+    if (document.getElementById('pwNew').value !== document.getElementById('pwNew2').value) { err.textContent = t('pwMismatch'); return; }
+    try { await api('changePassword', { oldPassword: document.getElementById('pwOld').value, newPassword: document.getElementById('pwNew').value }); e.target.reset(); err.textContent = ''; toast(t('pwChanged')); if (!DEMO) { store.set('ct_token', null); S.user = null; renderLogin('login', errText(Error('pw_changed'))); } } catch (x) { err.textContent = errText(x); }
+  };
+  document.getElementById('reload').onclick = async () => { try { await loadData(); renderView(); toast(t('reloaded')); } catch (x) { toast(errText(x)); } };
+  const rd = document.getElementById('resetDemo');
+  if (rd) rd.onclick = async () => { if (await ask(t('resetDemo') + '?', t('resetDemoMsg'), t('restore'), true)) { store.set('ct_demo_db_v3', null); store.set('ct_token', null); location.reload(); } };
+  document.getElementById('logout').onclick = () => { store.set('ct_token', null); S.token = S.user = null; S.tx = []; S.users = []; S.viewUser = 'all'; renderLogin(); };
+}
+
+/* ====== MODAL, TOAST ====== */
+function openModal(html) { modal.innerHTML = html; modal.hidden = false; document.body.style.overflow = 'hidden'; }
+function closeModal() { modal.hidden = true; modal.innerHTML = ''; document.body.style.overflow = ''; }
+function ask(title, msg, ok, danger) {
+  return new Promise(res => {
+    openModal(`<div class="sheet sm" role="alertdialog"><h2>${esc(title)}</h2><p class="hint">${esc(msg)}</p><footer><button class="btn ghost" data-r="0">${t('cancel')}</button><button class="btn ${danger ? 'danger' : 'primary'}" data-r="1">${esc(ok)}</button></footer></div>`);
+    modal.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { closeModal(); res(b.dataset.r === '1'); });
+  });
+}
+let tt; function toast(m) { const el = document.getElementById('toast'); el.textContent = m; el.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('show'), 2600); }
+modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('[data-close]')) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !modal.hidden) closeModal();
+  if (e.key === 'Enter' && e.target.matches && e.target.matches('.row[data-edit]')) e.target.click();
+});
+
+/* ====== SỰ KIỆN CHUNG ====== */
+document.addEventListener('click', async e => {
+  const lb = e.target.closest('[data-lang]'); if (lb) { setLang(lb.dataset.lang); return; }
+  const el = e.target.closest('[data-nav],[data-add],[data-m],[data-today],[data-edit],[data-cat],[data-fixed]');
+  if (!el || !S.user || el.closest('#modal')) return;
+  if (el.dataset.nav) { S.view = el.dataset.nav; renderApp(); scrollTo(0, 0); }
+  else if (el.hasAttribute('data-add')) openTx();
+  else if (el.dataset.m) { S.month = addMonth(S.month, +el.dataset.m); renderView(); }
+  else if (el.hasAttribute('data-today')) { S.month = curMonth(); renderView(); }
+  else if (el.dataset.edit) { const x = S.tx.find(y => y.id === el.dataset.edit); if (x) openTx(x); }
+  else if (el.dataset.cat) { S.f = { q: '', type: 'chi', cat: el.dataset.cat }; S.view = 'tx'; renderApp(); }
+  else if (el.hasAttribute('data-fixed')) {
+    const todo = fixedTodo(), nd = daysIn(S.month);
+    el.disabled = true;
+    const items = todo.map(x => ({ type: x.type, category: x.category, amount: x.amount, note: x.note, fixed: true, username: x.username, datetime: `${S.month}-${pad(Math.min(nd, +x.datetime.slice(8, 10)))}T${x.datetime.slice(11)}` }));
+    try { const r = await api('addMany', { items }); S.tx.push(...r.tx.map(normTx)); renderView(); toast(t('fixedAdded', { n: items.length })); } catch (x) { toast(errText(x)); el.disabled = false; }
+  }
+});
+document.addEventListener('change', e => { if (e.target.id === 'uSel') { S.viewUser = e.target.value; renderView(); } });
+
+/* ====== KHỞI ĐỘNG ====== */
+(async () => {
+  document.documentElement.lang = LANG; document.title = t('appName');
+  app.innerHTML = `<div class="loading">${t('loading')}</div>`;
+  S.token = store.get('ct_token');
+  if (!S.token) return renderLogin();
+  try { S.user = (await api('me')).user; await loadData(); renderApp(); }
+  catch (e) { store.set('ct_token', null); S.token = null; renderLogin('login', errText(e)); }
+})();
+}
+</script>
+</body>
+</html>

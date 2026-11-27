@@ -37,13 +37,35 @@ button{cursor:pointer}
 .auth-lang{position:absolute;top:16px;right:16px}
 .auth-lang .lang{background:var(--soft)}.auth-lang .lang button{color:var(--muted)}.auth-lang .lang button.on{background:var(--pri);color:#fff}
 @media (max-width:900px){.auth-lang{position:fixed;top:14px;right:14px;z-index:5}.auth-lang .lang{background:#ffffff26}.auth-lang .lang button{color:#fff}.auth-lang .lang button.on{background:var(--lime);color:#00463c}.auth-brand{padding-top:72px!important}}
+.cb-bar i.thu{background:var(--inc)}
+/* calendar */
+.calsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--soft);border-radius:12px;padding:12px 6px;margin-bottom:14px;text-align:center}
+.calsum div{display:grid;gap:2px;border-left:1px solid var(--line)}.calsum div:first-child{border:0}
+.calsum span{font-size:13px;color:var(--muted)}.calsum b{font:600 17px "Inter Tight",Inter,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal .wd{font-size:12px;color:var(--muted);text-align:center;font-weight:600;padding:2px 0 4px}
+.cd{min-height:76px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:6px 7px;display:flex;flex-direction:column;align-items:stretch;text-align:left;gap:1px;color:var(--ink)}
+.cd:hover{border-color:var(--muted)}
+.cd .dn{font-size:13px;font-weight:600;margin-bottom:auto}
+.cd .ci,.cd .ce{font-size:12px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;letter-spacing:-.01em}
+.ci{color:var(--inc)}.ce{color:var(--exp)}
+.cd.sel{background:var(--soft)}
+.cd.today{border-color:var(--pri);box-shadow:inset 0 0 0 1px var(--pri)}
+.cnav{display:flex;gap:6px}.cnav button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:20px}
+/* period tabs */
+.pseg{display:flex;gap:4px;background:#ffffff1a;padding:4px;border-radius:12px;overflow-x:auto;max-width:100%;scrollbar-width:none}
+.pseg button{border:0;background:none;color:#ffffffcc;height:38px;padding:0 14px;border-radius:9px;font-weight:600;font-size:14px;white-space:nowrap;flex:none}
+.pseg button.on{background:var(--lime);color:#00463c}
+.rng{display:flex;gap:10px;flex-wrap:wrap}
+.rng label{display:grid;gap:4px;font-size:13px;color:#ffffffc7}
+.rng input{height:44px;border-radius:12px;border:1px solid #ffffff38;background:#ffffff1a;color:#fff;padding:0 10px;font-size:16px;color-scheme:dark}
 /* top bar */
 .top{background:var(--brand);color:#fff;position:sticky;top:0;z-index:20}
 .top-in{display:flex;align-items:center;gap:16px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;white-space:nowrap}
 .pill{font:600 11px Inter;font-style:normal;background:var(--coral);color:#2a0d07;padding:2px 8px;border-radius:99px}
 .tabs{display:flex;gap:4px;margin-left:12px}
-.tabs button{display:flex;align-items:center;gap:8px;background:none;border:0;color:#ffffffbf;height:44px;padding:0 14px;border-radius:10px;font-weight:500}
+.tabs button{display:flex;align-items:center;gap:8px;white-space:nowrap;background:none;border:0;color:#ffffffbf;height:44px;padding:0 14px;border-radius:10px;font-weight:500}
 .tabs button.on{background:#ffffff1f;color:#fff}
 .tabs svg,.bnav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border-radius:10px;border:1px solid transparent;font-weight:600;font-size:15px;background:var(--soft);white-space:nowrap}
@@ -188,17 +210,22 @@ main{padding-bottom:24px}
 .tip{position:fixed;z-index:40;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;box-shadow:0 6px 20px #0000002a;min-width:170px}
 .tip b{display:block;margin-bottom:4px}.tip div{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
 .loading{min-height:100vh;display:grid;place-items:center;color:var(--muted)}
+@media (max-width:1240px){.tabs svg{display:none}.tabs button{padding:0 11px}.logo .pill{display:none}}
 @media (max-width:900px){
  .tabs,.add-d{display:none}.add-d+.lang{margin-left:auto}
  .grid{grid-template-columns:minmax(0,1fr)}.span2{grid-column:auto}
  .hero-grid{grid-template-columns:minmax(0,1fr);gap:18px}
  main{padding-bottom:110px}
- .bnav{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
- .bnav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:60px;background:none;border:0;font-size:11px;color:var(--muted);font-weight:500}
- .bnav button.on{color:var(--inc)}
+ .fixbn{margin-top:4px}
+ .bnav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;background:var(--brand);border-radius:24px;height:68px;padding:0 4px;box-shadow:0 12px 32px #00231d59,0 0 0 1px #ffffff14 inset}
+ .bnav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:60px;background:none;border:0;font-size:11px;color:#ffffffa6;font-weight:500;white-space:nowrap}
+ .bnav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+ .bnav button.on{color:#fff}.bnav button.on svg{stroke:var(--lime)}
+ .bnav .mid{justify-self:center;width:56px;height:56px;border-radius:50%;background:var(--lime);color:#00463c;box-shadow:0 6px 18px #0000004d}
+ .bnav .mid svg{width:28px;height:28px;stroke-width:2.6}
  .fab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:18px;border:0;background:var(--coral);color:#2a0d07;z-index:31;box-shadow:0 8px 24px #0000003d}
  .fab svg{width:28px;height:28px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round}
- .toast{bottom:150px}
+ .toast{bottom:100px}
  .auth{grid-template-columns:minmax(0,1fr)}
  .auth-brand{padding:28px 20px}.auth-art{max-width:320px}
 }
@@ -210,6 +237,7 @@ main{padding-bottom:24px}
  .sheet footer .primary{flex:1}
  .two{grid-template-columns:1fr}
  .fig{height:250px}.fig.sm{height:210px}
+ .cal{gap:4px}.cd{min-height:60px;padding:4px 4px 5px;border-radius:8px}.cd .dn{font-size:12px}.cd .ci,.cd .ce{font-size:10px}.calsum b{font-size:15px}.calsum span{font-size:12px}
  .filters select{flex:1 1 140px}
  table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start!important}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;color:var(--muted);font-size:12px}.stack td:empty{display:none}.stack .acts{justify-content:flex-start;flex-wrap:wrap}
 }
@@ -225,7 +253,7 @@ main{padding-bottom:24px}
 /* ====== CẤU HÌNH / CONFIG ======
    Dán URL Web App của Google Apps Script (kết thúc bằng /exec) vào API_URL.
    Để trống = chế độ DEMO (dữ liệu mẫu chỉ lưu trong trình duyệt). */
-const API_URL = 'https://script.google.com/macros/s/AKfycbwNbZ1K3yn0cAxj-DywVdzBAvKsVxef5rgEXgT2UyZHP4wyNRvfTJa5wpaevtio-_UJsw/exec';
+const API_URL = '';
 const DEMO = !API_URL;
 
 /* ====== NGÔN NGỮ / LANGUAGES ====== */
@@ -264,6 +292,11 @@ vi: {
   data: 'Dữ liệu', storage: 'Lưu trữ', storDemo: 'Bản mẫu – dữ liệu demo trong trình duyệt', storSheet: 'Google Sheet (qua Apps Script)', reload: 'Tải lại dữ liệu', reloaded: 'Đã tải lại',
   resetDemo: 'Khôi phục dữ liệu mẫu', resetDemoMsg: 'Mọi thay đổi trong bản demo sẽ bị xóa.', restore: 'Khôi phục', logout: 'Đăng xuất', loading: 'Đang tải…', language: 'Ngôn ngữ',
   cats: {},
+  wd: ['T2','T3','T4','T5','T6','T7','CN'], quarterFmt: (q, y) => `Quý ${q}/${y}`, yearFmt: y => `Năm ${y}`,
+  nav_report: 'Báo cáo', nav_more: 'Khác', pDay: 'Ngày', pWeek: 'Tuần', pMonth: 'Tháng', pQuarter: 'Quý', pYear: 'Năm', pCustom: 'Tùy chọn', from: 'Từ ngày', to: 'Đến ngày',
+  reportTitle: 'Báo cáo thu chi', balance: 'Chênh lệch', chBy: 'Diễn biến thu chi', incByCat: 'Thu theo loại', noIncPeriod: 'Chưa có khoản thu trong kỳ', noExpPeriod: 'Chưa có khoản chi trong kỳ',
+  calendar: 'Lịch thu chi · {m}', calHint: 'Xanh (+) là thu, đỏ (−) là chi, K = nghìn. Bấm một ngày để xem chi tiết.', txInPeriod: 'Giao dịch trong kỳ', noPeriodTx: 'Không có giao dịch trong kỳ này',
+  incCount: '{n} khoản thu', biggest: 'Lớn nhất: {x}', manageUsersHint: 'Tạo, xóa tài khoản và xem dữ liệu từng người', open: 'Mở', showing: 'Hiện {a}/{b} giao dịch mới nhất',
   err: { bad_login: 'Sai tên đăng nhập hoặc mật khẩu', locked: 'Sai mật khẩu quá nhiều lần. Thử lại sau 10 phút.', reg_off: 'Chức năng tự đăng ký đang tắt. Liên hệ admin để được cấp tài khoản.',
     bad_username: 'Tên đăng nhập 3–30 ký tự: chữ thường không dấu, số, dấu chấm hoặc gạch dưới', user_exists: 'Tên đăng nhập đã tồn tại', short_pw: 'Mật khẩu cần ít nhất 6 ký tự',
     login_required: 'Vui lòng đăng nhập', bad_session: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn, vui lòng đăng nhập lại', user_gone: 'Tài khoản không còn tồn tại',
@@ -305,7 +338,12 @@ en: {
   curHint: 'Currency only changes how amounts are shown on this device; it does not convert them.', save: 'Save', savedOk: 'Saved', changePw: 'Change password', curPw: 'Current password', pwChanged: 'Password changed',
   data: 'Data', storage: 'Storage', storDemo: 'Demo — sample data in this browser', storSheet: 'Google Sheets (via Apps Script)', reload: 'Reload data', reloaded: 'Reloaded',
   resetDemo: 'Restore sample data', resetDemoMsg: 'All changes in the demo will be lost.', restore: 'Restore', logout: 'Sign out', loading: 'Loading…', language: 'Language',
-  cats: { 'Chi phí hàng ngày': 'Daily expenses', 'Ăn uống': 'Food & drink', 'Đi lại': 'Transport', 'Mua đồ': 'Shopping', 'Siêu thị': 'Supermarket', 'Chi phí cố định hàng tháng': 'Fixed monthly costs',
+  wd: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], quarterFmt: (q, y) => `Q${q} ${y}`, yearFmt: y => `${y}`,
+  nav_report: 'Reports', nav_more: 'More', pDay: 'Day', pWeek: 'Week', pMonth: 'Month', pQuarter: 'Quarter', pYear: 'Year', pCustom: 'Custom', from: 'From', to: 'To',
+  reportTitle: 'Income & spending report', balance: 'Net', chBy: 'Income & spending over time', incByCat: 'Income by category', noIncPeriod: 'No income in this period', noExpPeriod: 'No spending in this period',
+  calendar: 'Calendar · {m}', calHint: 'Green (+) is income, red (−) is spending, K = thousand. Tap a day for details.', txInPeriod: 'Transactions in period', noPeriodTx: 'No transactions in this period',
+  incCount: '{n} income items', biggest: 'Largest: {x}', manageUsersHint: 'Create or delete accounts and view each person’s data', open: 'Open', showing: 'Showing latest {a} of {b}',
+  cats: { 'Chi phí hàng ngày': 'Daily expenses', 'Ăn uống': 'Food & drink', 'Đi lại': 'Transport', 'Mua đồ': 'Shopping', 'Siêu thị': 'Supermarket', 'Chi phí cố định hàng tháng': 'Fixed monthly costs', 'Lương cộng tác viên': 'Contractor wages', 'Xe nâng': 'Forklift', 'Thuê người': 'Hired labor',
     'Nhà ở': 'Housing', 'Điện nước & Internet': 'Utilities & Internet', 'Sức khỏe': 'Health', 'Học tập': 'Education', 'Giải trí': 'Entertainment', 'Gửi về gia đình': 'Sent to family', 'Khác': 'Other',
     'Lương': 'Salary', 'Thưởng': 'Bonus', 'Phụ cấp': 'Allowance', 'Thu khác': 'Other income' },
   err: { bad_login: 'Wrong username or password', locked: 'Too many failed attempts. Try again in 10 minutes.', reg_off: 'Self sign-up is turned off. Ask the admin for an account.',
@@ -349,7 +387,12 @@ ht: {
   curHint: 'Lajan an chanje sèlman fason montan yo parèt sou aparèy sa a, li pa konvèti yo.', save: 'Anrejistre', savedOk: 'Anrejistre', changePw: 'Chanje modpas', curPw: 'Modpas aktyèl', pwChanged: 'Modpas chanje',
   data: 'Done', storage: 'Estokaj', storDemo: 'Demo — done egzanp nan navigatè sa a', storSheet: 'Google Sheets (atravè Apps Script)', reload: 'Rechaje done', reloaded: 'Rechaje',
   resetDemo: 'Retabli done egzanp', resetDemoMsg: 'Tout chanjman nan demo a ap efase.', restore: 'Retabli', logout: 'Dekonekte', loading: 'Ap chaje…', language: 'Lang',
-  cats: { 'Chi phí hàng ngày': 'Depans chak jou', 'Ăn uống': 'Manje ak bwason', 'Đi lại': 'Transpò', 'Mua đồ': 'Achte bagay', 'Siêu thị': 'Makèt', 'Chi phí cố định hàng tháng': 'Depans fiks chak mwa',
+  wd: ['Len','Mad','Mèk','Jed','Van','Sam','Dim'], quarterFmt: (q, y) => `Trimès ${q} ${y}`, yearFmt: y => `Ane ${y}`,
+  nav_report: 'Rapò', nav_more: 'Plis', pDay: 'Jou', pWeek: 'Semèn', pMonth: 'Mwa', pQuarter: 'Trimès', pYear: 'Ane', pCustom: 'Pèsonalize', from: 'Soti', to: 'Rive',
+  reportTitle: 'Rapò revni ak depans', balance: 'Diferans', chBy: 'Revni ak depans sou tan', incByCat: 'Revni pa kategori', noIncPeriod: 'Pa gen revni nan peryòd la', noExpPeriod: 'Pa gen depans nan peryòd la',
+  calendar: 'Kalandriye · {m}', calHint: 'Vèt (+) se revni, wouj (−) se depans, K = mil. Peze yon jou pou wè detay.', txInPeriod: 'Tranzaksyon nan peryòd la', noPeriodTx: 'Pa gen tranzaksyon nan peryòd sa a',
+  incCount: '{n} revni', biggest: 'Pi gwo: {x}', manageUsersHint: 'Kreye oswa efase kont epi gade done chak moun', open: 'Louvri', showing: '{a} dènye sou {b}',
+  cats: { 'Chi phí hàng ngày': 'Depans chak jou', 'Ăn uống': 'Manje ak bwason', 'Đi lại': 'Transpò', 'Mua đồ': 'Achte bagay', 'Siêu thị': 'Makèt', 'Chi phí cố định hàng tháng': 'Depans fiks chak mwa', 'Lương cộng tác viên': 'Salè kolaboratè', 'Xe nâng': 'Fòklif', 'Thuê người': 'Lwe moun travay',
     'Nhà ở': 'Lojman', 'Điện nước & Internet': 'Kouran, dlo & Entènèt', 'Sức khỏe': 'Sante', 'Học tập': 'Edikasyon', 'Giải trí': 'Lwazi', 'Gửi về gia đình': 'Voye bay fanmi', 'Khác': 'Lòt',
     'Lương': 'Salè', 'Thưởng': 'Bonis', 'Phụ cấp': 'Alokasyon', 'Thu khác': 'Lòt revni' },
   err: { bad_login: 'Non itilizatè oswa modpas pa bon', locked: 'Twòp eseye ki pa bon. Eseye ankò nan 10 minit.', reg_off: 'Enskripsyon an fèmen. Mande admin nan yon kont.',
@@ -369,7 +412,7 @@ const t = (k, v) => { let s = L[LANG][k] ?? L.vi[k] ?? k; if (v) for (const x in
 const errText = e => { const m = String(e && e.message || e); return L[LANG].err[m] || L.vi.err[m] || m; };
 
 const CATS = {
-  chi: ['Chi phí hàng ngày','Ăn uống','Đi lại','Mua đồ','Siêu thị','Chi phí cố định hàng tháng','Nhà ở','Điện nước & Internet','Sức khỏe','Học tập','Giải trí','Gửi về gia đình','Khác'],
+  chi: ['Chi phí hàng ngày','Ăn uống','Đi lại','Mua đồ','Siêu thị','Chi phí cố định hàng tháng','Lương cộng tác viên','Xe nâng','Thuê người','Nhà ở','Điện nước & Internet','Sức khỏe','Học tập','Giải trí','Gửi về gia đình','Khác'],
   thu: ['Lương','Thưởng','Phụ cấp','Thu khác']
 };
 const ALLC = [...CATS.chi, ...CATS.thu];
@@ -390,10 +433,12 @@ const monthLabel = m => L[LANG].monthFmt(+m.slice(5, 7), m.slice(0, 4));
 const dmLabel = (d, m) => L[LANG].dm(+d, +m);
 const dayLabel = d => { const dt = new Date(d + 'T00:00'); return L[LANG].dayFmt(L[LANG].days[dt.getDay()], dt.getDate(), dt.getMonth() + 1, dt.getFullYear()); };
 
-const S = { token: null, user: null, tx: [], users: [], month: curMonth(), view: 'home', viewUser: 'all', f: { q: '', type: 'all', cat: 'all' }, cur: store.get('ct_cur') || 'USD', authMode: 'login' };
+const S = { token: null, user: null, tx: [], users: [], month: curMonth(), view: 'home', viewUser: 'all', f: { q: '', type: 'all', cat: 'all' }, cur: store.get('ct_cur') || 'USD', authMode: 'login', rp: { mode: 'month', anchor: '', from: '', to: '' } };
 const isAdmin = () => S.user && S.user.role === 'admin';
 const fmt = n => { const v = Math.abs(+n || 0); try { return new Intl.NumberFormat(L[LANG].locale, { style: 'currency', currency: S.cur, currencyDisplay: 'narrowSymbol', maximumFractionDigits: S.cur === 'VND' ? 0 : 2 }).format(v); } catch (e) { return v.toLocaleString() + ' ' + S.cur; } };
-const fmtC = n => new Intl.NumberFormat(L[LANG].locale, { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+const fmtC = n => fmtK(n);
+const fmtK = n => { const v = Math.abs(+n || 0), f = (x, u) => new Intl.NumberFormat(L[LANG].locale, { maximumFractionDigits: x < 10 ? 1 : x < 100 ? 1 : 0 }).format(x) + u;
+  return v >= 1e6 ? f(v / 1e6, 'M') : v >= 1e3 ? f(v / 1e3, 'K') : new Intl.NumberFormat(L[LANG].locale, { maximumFractionDigits: v < 100 ? 1 : 0 }).format(v); };
 const niceMax = v => { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; };
 
 /* ====== BACKEND DEMO (chạy trong trình duyệt, cùng giao diện với Apps Script) ====== */
@@ -422,6 +467,9 @@ const Local = (() => {
       add(u, 'chi', 'Nhà ở', 380 * k, `${m}-02T08:30`, '', true);
       add(u, 'chi', 'Điện nước & Internet', 55, `${m}-03T19:10`, '', true);
       add(u, 'chi', 'Gửi về gia đình', 300 * k, `${m}-06T20:00`, '', true);
+      add(u, 'chi', 'Lương cộng tác viên', 240 * k, `${m}-10T15:00`, '', true);
+      if (rnd() > .4) add(u, 'chi', 'Xe nâng', 60 + rnd() * 90, `${m}-14T09:30`, '');
+      if (rnd() > .35) add(u, 'chi', 'Thuê người', 40 + rnd() * 80, `${m}-20T08:00`, '');
       if (rnd() > .45) add(u, 'thu', 'Thưởng', 100 + rnd() * 220, `${m}-25T10:00`, 'KPI');
       for (let d = 1; d <= daysIn(m); d++) {
         const ds = `${m}-${pad(d)}`, mi = () => pad(Math.floor(rnd() * 60));
@@ -435,8 +483,8 @@ const Local = (() => {
     }
     return { users, tx };
   }
-  let db = store.get('ct_demo_db_v3') || seed();
-  const save = () => store.set('ct_demo_db_v3', db);
+  let db = store.get('ct_demo_db_v4') || seed();
+  const save = () => store.set('ct_demo_db_v4', db);
   const pub = u => ({ username: u.username, name: u.name, role: u.role, created: u.created });
   const auth = tk => { if (!tk) throw Error('login_required'); const u = db.users.find(x => 'demo.' + x.username === tk); if (!u) throw Error('bad_session'); return u; };
   const admin = p => { const u = auth(p.token); if (u.role !== 'admin') throw Error('admin_only'); return u; };
@@ -496,6 +544,8 @@ const I = {
   list: '<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
   users: '<svg viewBox="0 0 24 24"><path d="M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM22 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8"/></svg>',
   cog: '<svg viewBox="0 0 24 24"><path d="M4 6h9m4 0h3M4 12h3m4 0h9M4 18h11m4 0h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+  report: '<svg viewBox="0 0 24 24"><path d="M12 3v9h9"/><path d="M20.5 15.5A9 9 0 1 1 8.5 3.7"/></svg>',
+  more: '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>',
   plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>'
 };
 const langSwitch = () => `<div class="lang" role="group" aria-label="${t('language')}">${[['vi', 'VI', 'Tiếng Việt'], ['en', 'EN', 'English'], ['ht', 'HT', 'Kreyòl ayisyen']].map(([k, s, n]) => `<button data-lang="${k}" class="${LANG === k ? 'on' : ''}" title="${n}" aria-pressed="${LANG === k}">${s}</button>`).join('')}</div>`;
@@ -567,8 +617,12 @@ async function loadData() {
 
 /* ====== KHUNG APP ====== */
 function renderApp() {
-  const nav = [['home', t('nav_home'), I.home], ['tx', t('nav_tx'), I.list], ...(isAdmin() ? [['users', t('nav_users'), I.users]] : []), ['settings', t('nav_settings'), I.cog]];
+  const nav = [['home', t('nav_home'), I.home], ['tx', t('nav_tx'), I.list], ['report', t('nav_report'), I.report], ...(isAdmin() ? [['users', t('nav_users'), I.users]] : []), ['settings', t('nav_settings'), I.cog]];
   const navBtns = nav.map(n => `<button data-nav="${n[0]}" class="${S.view === n[0] ? 'on' : ''}" aria-label="${n[1]}">${n[2]}<span>${n[1]}</span></button>`).join('');
+  const mb = (k, l, ic, on) => `<button data-nav="${k}" class="${on ? 'on' : ''}" aria-label="${l}">${ic}<span>${l}</span></button>`;
+  const mNav = mb('home', t('nav_home'), I.home, S.view === 'home') + mb('tx', t('nav_tx'), I.list, S.view === 'tx') +
+    `<button class="mid" data-add aria-label="${t('addTx')}">${I.plus}</button>` + mb('report', t('nav_report'), I.report, S.view === 'report') +
+    mb('settings', t('nav_more'), I.more, S.view === 'settings' || S.view === 'users');
   app.innerHTML = `<header class="top"><div class="wrap top-in">
     <div class="logo">${LOGO}<span>${t('appName')}</span>${DEMO ? '<em class="pill">Demo</em>' : ''}</div>
     <nav class="tabs">${navBtns}</nav>
@@ -576,8 +630,7 @@ function renderApp() {
     ${langSwitch()}
   </div></header>
   <main id="view"></main>
-  <nav class="bnav">${navBtns}</nav>
-  <button class="fab" data-add aria-label="${t('addTx')}">${I.plus}</button>`;
+  <nav class="bnav">${mNav}</nav>`;
   renderView();
 }
 let ro;
@@ -586,8 +639,10 @@ function renderView() {
   if (ro) { ro.disconnect(); ro = null; }
   tip.hidden = true;
   if (S.view === 'users' && !isAdmin()) S.view = 'home';
-  v.innerHTML = { home: vHome, tx: vTx, users: vUsers, settings: vSettings }[S.view]();
+  if (!S.rp.anchor) { const td = nowLocal().slice(0, 10); S.rp = { mode: 'month', anchor: td, from: td.slice(0, 8) + '01', to: td }; }
+  v.innerHTML = { home: vHome, tx: vTx, report: vReport, users: vUsers, settings: vSettings }[S.view]();
   if (S.view === 'home') { ro = new ResizeObserver(() => { drawCum(); drawTrend(); }); ['chCum', 'chTrend'].forEach(id => ro.observe(document.getElementById(id))); }
+  if (S.view === 'report') { bindReport(); const c = document.getElementById('chRep'); if (c) { ro = new ResizeObserver(drawReport); ro.observe(c); } }
   if (S.view === 'tx') { bindTx(); renderTxList(); }
   if (S.view === 'users') bindUsers();
   if (S.view === 'settings') bindSettings();
@@ -641,8 +696,9 @@ function vHome() {
     <article class="card span2"><header class="ch"><h2>${t('chCum')}</h2>${legend}</header><div class="fig"><svg id="chCum" role="img" aria-label="${t('chCum')}"></svg></div></article>
     <article class="card"><header class="ch"><h2>${t('byCat')}</h2><span class="legend">${fmt(chi)}</span></header>
       ${cats.length ? cats.map(([c, v]) => `<button class="cb" data-cat="${esc(c)}"><div class="cb-t"><span class="badge" style="--c:${catColor(c)}">${esc(mono(c))}</span><span class="nm">${esc(catName(c))}</span><span class="v">${fmt(v)}</span></div><div class="cb-bar"><div><i style="width:${(v / mx * 100).toFixed(1)}%"></i></div><em>${Math.round(v / chi * 100)}%</em></div></button>`).join('') : empty(t('noExpMonth'))}</article>
-    <article class="card span2"><header class="ch"><h2>${t('trend6')}</h2>${legend}</header><div class="fig sm"><svg id="chTrend" role="img" aria-label="${t('trend6')}"></svg></div></article>
+    <article class="card span2">${calHTML(m, [m + '-01', m + '-' + pad(daysIn(m))], false)}</article>
     <article class="card"><header class="ch"><h2>${t('recent')}</h2><button class="link" data-nav="tx">${t('seeAll')}</button></header>${txRows(recent)}</article>
+    <article class="card full"><header class="ch"><h2>${t('trend6')}</h2>${legend}</header><div class="fig sm"><svg id="chTrend" role="img" aria-label="${t('trend6')}"></svg></div></article>
   </section>`;
 }
 function showTip(e, html) {
@@ -688,25 +744,139 @@ function drawCum() {
   hit.addEventListener('pointerleave', () => { hov.style.display = 'none'; hideTip(); });
 }
 function barPath(x, y, w, h, r) { if (h <= 0.5) return ''; r = Math.min(r, h, w / 2); return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; }
-function drawTrend() {
-  const s = document.getElementById('chTrend'); if (!s) return; const W = s.clientWidth, H = s.clientHeight; if (!W) return;
-  const ms = [-5, -4, -3, -2, -1, 0].map(k => addMonth(S.month, k)).map(m => { const T = monthTx(m); return { m, thu: sum(T, 'thu'), chi: sum(T, 'chi') }; });
-  const narrow = W < 520, pl = narrow ? 6 : 52, pr = 6, pt = 10, pb = 26, max = niceMax(Math.max(1, ...ms.map(d => Math.max(d.thu, d.chi))));
-  const gw = (W - pl - pr) / 6, bw = Math.min(30, (gw - 18) / 2), Y = v => pt + (H - pt - pb) * (1 - v / max), y0 = Y(0);
+function drawBars(id, B, onPick) {
+  const s = document.getElementById(id); if (!s) return; const W = s.clientWidth, H = s.clientHeight; if (!W) return;
+  const n = B.length, narrow = W < 520, pl = narrow ? 6 : 52, pr = 6, pt = 10, pb = 26, max = niceMax(Math.max(1, ...B.map(d => Math.max(d.thu, d.chi))));
+  const gw = (W - pl - pr) / n, gap = n > 20 ? 1 : 2, bw = Math.max(2, Math.min(30, (gw - Math.max(4, gw * .28)) / 2)), Y = v => pt + (H - pt - pb) * (1 - v / max), y0 = Y(0);
+  const step = Math.max(1, Math.ceil(n / Math.max(1, Math.floor((W - pl - pr) / (narrow ? 30 : 38)))));
   let g = '';
-  for (let k = 0; k <= 4; k++) { const y = Y(max * k / 4); g += `<line class="gl" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/>`; if (!narrow) g += `<text x="${pl - 8}" y="${y + 4}" text-anchor="end">${fmtC(max * k / 4)}</text>`; }
-  ms.forEach((d, i) => {
+  for (let k = 0; k <= 4; k++) { const y = Y(max * k / 4); g += `<line class="gl" x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}"/>`; if (!narrow) g += `<text x="${pl - 8}" y="${y + 4}" text-anchor="end">${fmtK(max * k / 4)}</text>`; }
+  B.forEach((d, i) => {
     const cx = pl + gw * i + gw / 2;
-    g += `<path class="b-inc" d="${barPath(cx - bw - 1, Y(d.thu), bw, y0 - Y(d.thu), 4)}"/><path class="b-exp" d="${barPath(cx + 1, Y(d.chi), bw, y0 - Y(d.chi), 4)}"/>
-      <text x="${cx}" y="${H - 6}" text-anchor="middle" class="${d.m === S.month ? 'lbl-s' : ''}">${L[LANG].mshort[+d.m.slice(5) - 1]}${narrow ? '' : ' ' + d.m.slice(2, 4)}</text>
-      <rect x="${pl + gw * i}" y="0" width="${gw}" height="${H}" fill="transparent" data-i="${i}" style="cursor:pointer"/>`;
+    g += `<path class="b-inc" d="${barPath(cx - bw - gap / 2, Y(d.thu), bw, y0 - Y(d.thu), Math.min(4, bw / 2))}"/><path class="b-exp" d="${barPath(cx + gap / 2, Y(d.chi), bw, y0 - Y(d.chi), Math.min(4, bw / 2))}"/>`;
+    if (i % step === 0 || d.hl) g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" class="${d.hl ? 'lbl-s' : ''}">${esc(d.label)}</text>`;
+    g += `<rect x="${pl + gw * i}" y="0" width="${gw}" height="${H}" fill="transparent" data-i="${i}" style="cursor:pointer"/>`;
   });
   s.innerHTML = g;
   s.querySelectorAll('rect[data-i]').forEach(r => {
-    const d = ms[+r.dataset.i], f = e => showTip(e, `<b>${monthLabel(d.m)}</b><div><span>${t('inc')}</span><span>${fmt(d.thu)}</span></div><div><span>${t('exp')}</span><span>${fmt(d.chi)}</span></div><div><span>${t('left')}</span><span>${d.thu - d.chi < 0 ? '−' : ''}${fmt(d.thu - d.chi)}</span></div>`);
+    const d = B[+r.dataset.i], f = e => showTip(e, `<b>${esc(d.title)}</b><div><span>${t('inc')}</span><span>${fmt(d.thu)}</span></div><div><span>${t('exp')}</span><span>${fmt(d.chi)}</span></div><div><span>${t('balance')}</span><span>${d.thu - d.chi < 0 ? '−' : ''}${fmt(d.thu - d.chi)}</span></div>`);
     r.addEventListener('pointermove', f); r.addEventListener('pointerleave', hideTip);
-    r.addEventListener('click', () => { S.month = d.m; renderView(); });
+    if (onPick) r.addEventListener('click', () => { hideTip(); onPick(d); });
   });
+}
+function drawTrend() {
+  const B = [-5, -4, -3, -2, -1, 0].map(k => addMonth(S.month, k)).map(m => { const T = monthTx(m); return { m, label: L[LANG].mshort[+m.slice(5) - 1], title: monthLabel(m), thu: sum(T, 'thu'), chi: sum(T, 'chi'), hl: m === S.month }; });
+  drawBars('chTrend', B, d => { S.month = d.m; renderView(); });
+}
+
+/* ====== LỊCH THU CHI ====== */
+function calHTML(month, rng, withNav) {
+  const nd = daysIn(month), off = (new Date(month + '-01T00:00').getDay() + 6) % 7, today = nowLocal().slice(0, 10);
+  const D = {}; visible().forEach(x => { if (!x.datetime.startsWith(month)) return; const k = x.datetime.slice(0, 10); (D[k] = D[k] || { thu: 0, chi: 0 })[x.type] += x.amount; });
+  const tot = Object.values(D).reduce((a, d) => (a.thu += d.thu, a.chi += d.chi, a), { thu: 0, chi: 0 }), net = tot.thu - tot.chi;
+  let cells = L[LANG].wd.map(w => `<div class="wd">${w}</div>`).join('') + '<i></i>'.repeat(off);
+  for (let d = 1; d <= nd; d++) {
+    const k = `${month}-${pad(d)}`, v = D[k], inR = !(rng[0] <= month + '-01' && rng[1] >= month + '-' + pad(nd)) && k >= rng[0] && k <= rng[1];
+    cells += `<button class="cd${inR ? ' sel' : ''}${k === today ? ' today' : ''}" data-day="${k}" aria-label="${dayLabel(k)}"><span class="dn">${d}</span>${v && v.thu ? `<span class="ci">+${fmtK(v.thu)}</span>` : ''}${v && v.chi ? `<span class="ce">−${fmtK(v.chi)}</span>` : ''}</button>`;
+  }
+  return `<header class="ch"><h2>${t('calendar', { m: monthLabel(month) })}</h2>${withNav ? `<div class="cnav"><button data-calm="-1" aria-label="${t('prevMonth')}">‹</button><button data-calm="1" aria-label="${t('nextMonth')}">›</button></div>` : ''}</header>
+    <div class="calsum"><div><span>${t('totalInc')}</span><b class="thu">${fmt(tot.thu)}</b></div><div><span>${t('totalExp')}</span><b class="chi">${fmt(tot.chi)}</b></div><div><span>${t('balance')}</span><b>${net < 0 ? '−' : ''}${fmt(net)}</b></div></div>
+    <div class="cal">${cells}</div><p class="hint" style="margin-top:10px">${t('calHint')}</p>`;
+}
+
+/* ====== BÁO CÁO THEO KỲ ====== */
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseD = x => new Date(x + 'T00:00');
+const addDays = (x, n) => { const d = parseD(x); d.setDate(d.getDate() + n); return ymd(d); };
+const diffDays = (a, b) => Math.round((parseD(b) - parseD(a)) / 864e5);
+function rpRange() {
+  const r = S.rp, a = parseD(r.anchor);
+  if (r.mode === 'day') return [r.anchor, r.anchor];
+  if (r.mode === 'week') { const st = addDays(r.anchor, -((a.getDay() + 6) % 7)); return [st, addDays(st, 6)]; }
+  if (r.mode === 'month') { const m = r.anchor.slice(0, 7); return [m + '-01', m + '-' + pad(daysIn(m))]; }
+  if (r.mode === 'quarter') { const y = a.getFullYear(), q = Math.floor(a.getMonth() / 3), em = `${y}-${pad(q * 3 + 3)}`; return [`${y}-${pad(q * 3 + 1)}-01`, em + '-' + pad(daysIn(em))]; }
+  if (r.mode === 'year') return [`${a.getFullYear()}-01-01`, `${a.getFullYear()}-12-31`];
+  return r.from <= r.to ? [r.from, r.to] : [r.to, r.from];
+}
+function rpShift(k) {
+  const r = S.rp;
+  if (r.mode === 'day') r.anchor = addDays(r.anchor, k);
+  else if (r.mode === 'week') r.anchor = addDays(r.anchor, 7 * k);
+  else if (r.mode === 'month') r.anchor = addMonth(r.anchor.slice(0, 7), k) + '-01';
+  else if (r.mode === 'quarter') r.anchor = addMonth(r.anchor.slice(0, 7), 3 * k) + '-01';
+  else if (r.mode === 'year') r.anchor = `${+r.anchor.slice(0, 4) + k}-01-01`;
+  else { const [a, b] = rpRange(), n = diffDays(a, b) + 1; r.from = addDays(a, n * k); r.to = addDays(b, n * k); }
+}
+function rpLabel() {
+  const [a, b] = rpRange(), r = S.rp, A = parseD(a), Bd = parseD(b);
+  if (r.mode === 'day') return dayLabel(a);
+  if (r.mode === 'month') return monthLabel(a.slice(0, 7));
+  if (r.mode === 'quarter') return L[LANG].quarterFmt(Math.floor(A.getMonth() / 3) + 1, A.getFullYear());
+  if (r.mode === 'year') return L[LANG].yearFmt(A.getFullYear());
+  return `${dmLabel(A.getDate(), A.getMonth() + 1)}${A.getFullYear() !== Bd.getFullYear() ? ' ' + A.getFullYear() : ''} – ${dmLabel(Bd.getDate(), Bd.getMonth() + 1)} ${Bd.getFullYear()}`;
+}
+const rpTx = () => { const [a, b] = rpRange(); return visible().filter(x => { const d = x.datetime.slice(0, 10); return d >= a && d <= b; }); };
+function rpBuckets(T) {
+  const [a, b] = rpRange(), n = diffDays(a, b) + 1, mode = S.rp.mode;
+  const unit = mode === 'day' ? null : mode === 'quarter' ? 'week' : (mode === 'year' || n > 62) ? 'month' : 'day';
+  if (!unit) return null;
+  const B = [];
+  if (unit === 'day') for (let i = 0; i < n; i++) { const d = addDays(a, i), D = parseD(d); B.push({ key: d, label: mode === 'week' ? L[LANG].wd[(D.getDay() + 6) % 7] : String(D.getDate()), title: dayLabel(d), pick: { mode: 'day', anchor: d } }); }
+  if (unit === 'week') { let st = addDays(a, -((parseD(a).getDay() + 6) % 7)); while (st <= b) { const D = parseD(st), E = parseD(addDays(st, 6)); B.push({ key: st, label: dmLabel(D.getDate(), D.getMonth() + 1), title: `${dmLabel(D.getDate(), D.getMonth() + 1)} – ${dmLabel(E.getDate(), E.getMonth() + 1)}`, pick: { mode: 'week', anchor: st } }); st = addDays(st, 7); } }
+  if (unit === 'month') { let m = a.slice(0, 7); const multiY = a.slice(0, 4) !== b.slice(0, 4); while (m <= b.slice(0, 7)) { B.push({ key: m, label: L[LANG].mshort[+m.slice(5) - 1] + (multiY ? ' ' + m.slice(2, 4) : ''), title: monthLabel(m), pick: { mode: 'month', anchor: m + '-01' } }); m = addMonth(m, 1); } }
+  B.forEach(x => { x.thu = 0; x.chi = 0; });
+  const idx = {}; B.forEach((x, i) => idx[x.key] = i);
+  T.forEach(x => {
+    const d = x.datetime.slice(0, 10); let i;
+    if (unit === 'day') i = idx[d]; else if (unit === 'month') i = idx[d.slice(0, 7)]; else i = Math.floor(diffDays(B[0].key, d) / 7);
+    if (B[i]) B[i][x.type] += x.amount;
+  });
+  return B;
+}
+function catList(T, type, emptyMsg) {
+  const by = {}; T.filter(x => x.type === type).forEach(x => by[x.category] = (by[x.category] || 0) + x.amount);
+  const arr = Object.entries(by).sort((p, q) => q[1] - p[1]), mx = arr[0] ? arr[0][1] : 1, tot = arr.reduce((z, x) => z + x[1], 0);
+  return arr.length ? arr.map(([c, v]) => `<button class="cb" data-cat="${esc(c)}"><div class="cb-t"><span class="badge" style="--c:${catColor(c)}">${esc(mono(c))}</span><span class="nm">${esc(catName(c))}</span><span class="v">${fmt(v)}</span></div><div class="cb-bar"><div><i class="${type}" style="width:${(v / mx * 100).toFixed(1)}%"></i></div><em>${Math.round(v / tot * 100)}%</em></div></button>`).join('') : empty(emptyMsg);
+}
+function vReport() {
+  const r = S.rp, [a, b] = rpRange(), T = rpTx(), thu = sum(T, 'thu'), chi = sum(T, 'chi'), net = thu - chi;
+  const today = nowLocal().slice(0, 10), days = Math.max(1, diffDays(a, b < today ? b : (a > today ? b : today)) + 1);
+  const big = T.filter(x => x.type === 'chi').sort((p, q) => q.amount - p.amount)[0];
+  const list = [...T].sort((p, q) => q.datetime.localeCompare(p.datetime)), shown = list.slice(0, 40);
+  const modes = [['day', t('pDay')], ['week', t('pWeek')], ['month', t('pMonth')], ['quarter', t('pQuarter')], ['year', t('pYear')], ['custom', t('pCustom')]];
+  const legend = `<div class="legend"><span><i></i>${t('inc')}</span><span><i class="exp"></i>${t('exp')}</span></div>`;
+  return `<section class="hero"><div class="wrap">
+    <div class="ctx" style="padding-bottom:12px"><div class="pseg" role="tablist">${modes.map(([k, l]) => `<button data-rpm="${k}" class="${r.mode === k ? 'on' : ''}" role="tab" aria-selected="${r.mode === k}">${l}</button>`).join('')}</div>
+      ${isAdmin() ? `<label class="upick">${t('view')}<select id="uSel"><option value="all">${t('allUsers')}</option>${S.users.map(u => `<option value="${esc(u.username)}" ${S.viewUser === u.username ? 'selected' : ''}>${esc(u.name)} (${esc(u.username)})</option>`).join('')}</select></label>` : ''}</div>
+    <div class="ctx" style="padding-top:0">${r.mode === 'custom'
+      ? `<div class="rng"><label>${t('from')}<input type="date" id="rpFrom" value="${esc(a)}"></label><label>${t('to')}<input type="date" id="rpTo" value="${esc(b)}"></label></div>`
+      : `<div class="mpick"><button data-rps="-1" aria-label="‹">‹</button><span>${rpLabel()}</span><button data-rps="1" aria-label="›">›</button></div>`}</div>
+    <div class="hero-grid">
+      <div><div class="lbl">${t('balance')} · ${esc(rpLabel())}</div><div class="big ${net < 0 ? 'neg' : ''}">${net < 0 ? '−' : ''}${fmt(net)}</div>
+        <div class="sub">${t('nTx', { n: T.length })}</div></div>
+      <div class="figs">
+        <div class="fig-i"><div class="lbl"><span class="dot inc"></span>${t('totalInc')}</div><div class="num">${fmt(thu)}</div><div class="d">${t('incCount', { n: T.filter(x => x.type === 'thu').length })}</div></div>
+        <div class="fig-i"><div class="lbl"><span class="dot exp"></span>${t('totalExp')}</div><div class="num">${fmt(chi)}</div><div class="d">${big ? t('biggest', { x: fmt(big.amount) }) : '—'}</div></div>
+        <div class="fig-i"><div class="lbl">${t('avgDay')}</div><div class="num">${fmt(chi / days)}</div><div class="d">${days} ${t('pDay').toLowerCase()}</div></div>
+      </div></div></div></section>
+  <section class="wrap grid">
+    ${r.mode !== 'day' ? `<article class="card span2"><header class="ch"><h2>${t('chBy')}</h2>${legend}</header><div class="fig"><svg id="chRep" role="img" aria-label="${t('chBy')}"></svg></div></article>`
+      : `<article class="card span2"><header class="ch"><h2>${t('txInPeriod')}</h2></header>${list.length ? txRows(list) : empty(t('noPeriodTx'))}</article>`}
+    <article class="card"><header class="ch"><h2>${t('byCat')}</h2><span class="legend">${fmt(chi)}</span></header>${catList(T, 'chi', t('noExpPeriod'))}</article>
+    <article class="card span2">${calHTML(calMonthFor(a, b), [a, b], true)}</article>
+    <article class="card"><header class="ch"><h2>${t('incByCat')}</h2><span class="legend">${fmt(thu)}</span></header>${catList(T, 'thu', t('noIncPeriod'))}</article>
+    ${r.mode !== 'day' ? `<article class="card full"><header class="ch"><h2>${t('txInPeriod')}</h2>${list.length > shown.length ? `<span class="legend">${t('showing', { a: shown.length, b: list.length })}</span>` : ''}</header>${list.length ? txRows(shown) : empty(t('noPeriodTx'))}</article>` : ''}
+  </section>`;
+}
+function calMonthFor(a, b) {
+  const today = nowLocal().slice(0, 7);
+  let cm = ['day', 'week', 'month'].includes(S.rp.mode) ? S.rp.anchor.slice(0, 7) : (b.slice(0, 7) > today ? today : b.slice(0, 7));
+  return cm < a.slice(0, 7) ? a.slice(0, 7) : cm;
+}
+function drawReport() { const B = rpBuckets(rpTx()); if (B) drawBars('chRep', B, d => { S.rp.mode = d.pick.mode; S.rp.anchor = d.pick.anchor; renderView(); }); }
+function bindReport() {
+  const f = document.getElementById('rpFrom'), tt2 = document.getElementById('rpTo');
+  if (f) { const ch = () => { if (f.value && tt2.value) { S.rp.from = f.value; S.rp.to = tt2.value; renderView(); } }; f.onchange = ch; tt2.onchange = ch; }
 }
 
 /* ====== GIAO DỊCH ====== */
@@ -855,6 +1025,7 @@ function vSettings() {
       <label>${t('newPw')}<input class="in" id="pwNew" type="password" autocomplete="new-password"></label>
       <label>${t('password2')}<input class="in" id="pwNew2" type="password" autocomplete="new-password"></label>
       <button class="btn primary">${t('changePw')}</button><p class="err" id="pwErr"></p></form></article>
+    ${isAdmin() ? `<article class="card"><header class="ch"><h2>${t('usersTitle')}</h2></header><p class="hint">${t('manageUsersHint')}</p><button class="btn primary" style="margin-top:14px" data-nav="users">${t('open')} · ${S.users.length} ${t('account').toLowerCase()}</button></article>` : ''}
     <article class="card"><header class="ch"><h2>${t('data')}</h2></header>
       <dl class="kv"><dt>${t('storage')}</dt><dd>${DEMO ? t('storDemo') : t('storSheet')}</dd><dt>${t('nav_tx')}</dt><dd>${S.tx.length}</dd>${isAdmin() ? `<dt>${t('account')}</dt><dd>${S.users.length}</dd>` : ''}</dl>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn ghost" id="reload">${t('reload')}</button>${DEMO ? `<button class="btn ghost" id="resetDemo">${t('resetDemo')}</button>` : ''}<button class="btn danger" id="logout">${t('logout')}</button></div></article>
@@ -873,7 +1044,7 @@ function bindSettings() {
   };
   document.getElementById('reload').onclick = async () => { try { await loadData(); renderView(); toast(t('reloaded')); } catch (x) { toast(errText(x)); } };
   const rd = document.getElementById('resetDemo');
-  if (rd) rd.onclick = async () => { if (await ask(t('resetDemo') + '?', t('resetDemoMsg'), t('restore'), true)) { store.set('ct_demo_db_v3', null); store.set('ct_token', null); location.reload(); } };
+  if (rd) rd.onclick = async () => { if (await ask(t('resetDemo') + '?', t('resetDemoMsg'), t('restore'), true)) { store.set('ct_demo_db_v4', null); store.set('ct_token', null); location.reload(); } };
   document.getElementById('logout').onclick = () => { store.set('ct_token', null); S.token = S.user = null; S.tx = []; S.users = []; S.viewUser = 'all'; renderLogin(); };
 }
 
@@ -896,14 +1067,22 @@ document.addEventListener('keydown', e => {
 /* ====== SỰ KIỆN CHUNG ====== */
 document.addEventListener('click', async e => {
   const lb = e.target.closest('[data-lang]'); if (lb) { setLang(lb.dataset.lang); return; }
-  const el = e.target.closest('[data-nav],[data-add],[data-m],[data-today],[data-edit],[data-cat],[data-fixed]');
+  const el = e.target.closest('[data-nav],[data-add],[data-m],[data-today],[data-edit],[data-cat],[data-fixed],[data-day],[data-rpm],[data-rps],[data-calm]');
   if (!el || !S.user || el.closest('#modal')) return;
   if (el.dataset.nav) { S.view = el.dataset.nav; renderApp(); scrollTo(0, 0); }
   else if (el.hasAttribute('data-add')) openTx();
   else if (el.dataset.m) { S.month = addMonth(S.month, +el.dataset.m); renderView(); }
   else if (el.hasAttribute('data-today')) { S.month = curMonth(); renderView(); }
   else if (el.dataset.edit) { const x = S.tx.find(y => y.id === el.dataset.edit); if (x) openTx(x); }
-  else if (el.dataset.cat) { S.f = { q: '', type: 'chi', cat: el.dataset.cat }; S.view = 'tx'; renderApp(); }
+  else if (el.dataset.day) { S.rp.mode = 'day'; S.rp.anchor = el.dataset.day; S.view = 'report'; renderApp(); scrollTo(0, 0); }
+  else if (el.dataset.rpm) {
+    const m = el.dataset.rpm, [a, b] = rpRange();
+    if (m === 'custom') { S.rp.from = a; S.rp.to = b; } else if (S.rp.mode === 'custom') S.rp.anchor = b > nowLocal().slice(0, 10) ? nowLocal().slice(0, 10) : b;
+    S.rp.mode = m; renderView();
+  }
+  else if (el.dataset.rps) { rpShift(+el.dataset.rps); renderView(); }
+  else if (el.dataset.calm) { const cm = addMonth(document.querySelector('[data-day]').dataset.day.slice(0, 7), +el.dataset.calm); S.rp.mode = 'month'; S.rp.anchor = cm + '-01'; renderView(); }
+  else if (el.dataset.cat) { S.f = { q: '', type: 'all', cat: el.dataset.cat }; S.view = 'tx'; renderApp(); }
   else if (el.hasAttribute('data-fixed')) {
     const todo = fixedTodo(), nd = daysIn(S.month);
     el.disabled = true;
